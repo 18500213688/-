@@ -1,0 +1,62 @@
+<view class="container">
+  <!-- 周信息 -->
+  <view class="card">
+    <view class="card-title">📅 周信息</view>
+    
+    <view class="form-item">
+      <view class="form-label">当前周序号</view>
+      <input class="form-input" type="number" value="{{weekNo}}" bindinput="onWeekNoInput" placeholder="如：第1周" />
+    </view>
+
+    <view class="form-item">
+      <view class="form-label">周起始日期</view>
+      <picker mode="date" value="{{weekStart}}" bindchange="onWeekStartChange">
+        <input class="form-input" value="{{weekStart}}" disabled placeholder="选择周起始日期" />
+      </picker>
+    </view>
+  </view>
+
+  <!-- 周数据 -->
+  <view class="card">
+    <view class="card-title">📊 本周数据</view>
+
+    <view class="form-row cols2">
+      <view>
+        <view class="form-label">本周死淘（只）</view>
+        <input class="form-input" type="number" value="{{weekDead}}" bindinput="onDeadInput" placeholder="0" />
+      </view>
+      <view>
+        <view class="form-label">本周耗料（kg）</view>
+        <input class="form-input" type="digit" value="{{weekFeed}}" bindinput="onFeedInput" placeholder="0" />
+      </view>
+    </view>
+
+    <view class="form-row cols2">
+      <view>
+        <view class="form-label">周末均重（g）</view>
+        <input class="form-input" type="digit" value="{{weekWeight}}" bindinput="onWeightInput" placeholder="0" />
+      </view>
+      <view>
+        <view class="form-label">周末存栏（只）</view>
+        <input class="form-input" type="number" value="{{weekStock}}" bindinput="onStockInput" placeholder="0" />
+      </view>
+    </view>
+
+    <view class="form-item">
+      <view class="form-label">本周料比</view>
+      <input class="form-input" type="digit" value="{{weekFCR}}" bindinput="onFCRInput" placeholder="自动计算或手动填写" />
+    </view>
+
+    <view class="form-item">
+      <view class="form-label">备注</view>
+      <textarea class="form-textarea" value="{{remark}}" bindinput="onRemarkInput" placeholder="本周特殊情况说明..." maxlength="200"></textarea>
+    </view>
+  </view>
+
+  <!-- 保存按钮 -->
+  <view class="btn-area">
+    <button class="btn btn-success" bindtap="saveWeekData" loading="{{saving}}">
+      💾 保存本周数据
+    </button>
+  </view>
+</view>

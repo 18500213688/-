@@ -1,0 +1,189 @@
+<view class="container">
+
+  <!-- 顶部当前批次信息 -->
+  <view wx:if="{{hasBatch}}" style="background:#1677ff;color:#fff;padding:12px 16px;margin:10px 10px 0;border-radius:12px">
+    <view style="display:flex;margin-bottom:6px">
+      <view style="flex:1;text-align:center">
+        <view style="font-size:11px;opacity:0.75">栋号</view>
+        <view style="font-size:13px">{{companyHouse}}</view>
+      </view>
+      <view style="flex:1;text-align:center">
+        <view style="font-size:11px;opacity:0.75">品种</view>
+        <view style="font-size:13px">{{batchVariety}}</view>
+      </view>
+      <view style="flex:1;text-align:center">
+        <view style="font-size:11px;opacity:0.75">类型</view>
+        <view style="font-size:13px">{{batchType}}</view>
+      </view>
+    </view>
+    <view style="display:flex">
+      <view style="flex:1;text-align:center">
+        <view style="font-size:11px;opacity:0.75">入舍日期</view>
+        <view style="font-size:13px">{{batchDate}}</view>
+      </view>
+      <view style="flex:1;text-align:center">
+        <view style="font-size:11px;opacity:0.75">入舍数量（只）</view>
+        <view style="font-size:13px">{{batchQty}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 今日数据录入 -->
+  <view class="card">
+    <view class="card-title">📝 数据录入</view>
+
+    <!-- 日龄输入 -->
+    <view class="form-row" style="margin-bottom:10px">
+      <view style="flex:1">
+        <view class="form-label">日龄</view>
+        <input class="form-input" type="number" value="{{dayAge}}" data-field="dayAge" bindinput="onInput"
+               style="border-color:#1677ff;font-weight:600" placeholder="输入日龄" />
+      </view>
+      <view style="flex:1">
+        <view class="form-label">存栏（只）</view>
+        <input class="form-input" type="number" value="{{currentStock}}" data-field="currentStock" bindinput="onInput"
+               style="border-color:#52c41a;font-weight:600;text-align:center" />
+      </view>
+      <view style="flex:1;text-align:center">
+        <view class="form-label">存活率</view>
+        <view style="font-size:18px;font-weight:600;color:#1677ff;padding:6px 0">{{survivalRate}}%</view>
+      </view>
+    </view>
+    <view class="hint" style="margin-bottom:10px">💡 输入日龄后可回填历史数据</view>
+    <view class="divider"></view>
+
+    <!-- 死亡、淘汰、死淘（自动算） -->
+    <view class="form-row cols4" style="margin-bottom:10px">
+      <view>
+        <view class="form-label">死亡（只）</view>
+        <input class="form-input" type="number" value="{{deadCount}}" data-field="deadCount" bindinput="onInput" />
+      </view>
+      <view>
+        <view class="form-label">淘汰（只）</view>
+        <input class="form-input" type="number" value="{{culledCount}}" data-field="culledCount" bindinput="onInput" />
+      </view>
+      <view>
+        <view class="form-label">死淘（只）</view>
+        <input class="form-input" value="{{deadCullTotal}}" disabled style="background:#fff7e6;color:#fa8c16;font-weight:600" />
+      </view>
+      <view>
+        <view class="form-label">呼吸道（%）</view>
+        <input class="form-input" type="number" value="{{respiratoryRate}}" data-field="respiratoryRate" bindinput="onInput" />
+      </view>
+    </view>
+
+    <!-- 上料数据 -->
+    <view class="form-row cols3">
+      <view>
+        <view class="form-label">料塔上料量（kg）</view>
+        <input class="form-input" type="number" value="{{feedAmount}}" data-field="feedAmount" bindinput="onInput" />
+      </view>
+      <view>
+        <view class="form-label">公斤料价（元/kg）</view>
+        <input class="form-input" type="digit" value="{{feedPrice}}" data-field="feedPrice" bindinput="onInput" />
+      </view>
+      <view>
+        <view class="form-label">饲料厂家</view>
+        <input class="form-input" value="{{feedFactory}}" data-field="feedFactory" bindinput="onInput" />
+      </view>
+    </view>
+  </view>
+
+  <!-- 体重数据 -->
+  <view class="card">
+    <view class="card-title">⚖️ 体重数据（g）</view>
+    <view class="form-row cols3">
+      <view>
+        <view class="form-label">前</view>
+        <input class="form-input" type="number" value="{{weightFront}}" data-field="weightFront" bindinput="calculateWeightAvg" style="text-align:center;font-weight:600" />
+      </view>
+      <view>
+        <view class="form-label">中</view>
+        <input class="form-input" type="number" value="{{weightMiddle}}" data-field="weightMiddle" bindinput="calculateWeightAvg" style="text-align:center;font-weight:600" />
+      </view>
+      <view>
+        <view class="form-label">后</view>
+        <input class="form-input" type="number" value="{{weightRear}}" data-field="weightRear" bindinput="calculateWeightAvg" style="text-align:center;font-weight:600" />
+      </view>
+    </view>
+    <view class="hint">💡 填1~3个点，自动算平均：{{weightAvg}}g</view>
+  </view>
+
+  <!-- 耗料数据 -->
+  <view class="card">
+    <view class="card-title">🍽️ 耗料数据（g）</view>
+    <view class="form-row cols3">
+      <view>
+        <view class="form-label">前</view>
+        <input class="form-input" type="number" value="{{feedFront}}" data-field="feedFront" bindinput="calculateFeedAvg" style="text-align:center;font-weight:600" />
+      </view>
+      <view>
+        <view class="form-label">中</view>
+        <input class="form-input" type="number" value="{{feedMiddle}}" data-field="feedMiddle" bindinput="calculateFeedAvg" style="text-align:center;font-weight:600" />
+      </view>
+      <view>
+        <view class="form-label">后</view>
+        <input class="form-input" type="number" value="{{feedRear}}" data-field="feedRear" bindinput="calculateFeedAvg" style="text-align:center;font-weight:600" />
+      </view>
+    </view>
+    <view class="hint">💡 填1~3个点，自动算平均：{{feedAvg}}g</view>
+  </view>
+
+  <!-- 夜间环境 -->
+  <view class="card">
+    <view class="card-title">🌙 夜间环境（0:00~3:00）</view>
+    <view class="form-row cols3" style="margin-bottom:8px">
+      <view><view class="form-label">目标温度（℃）</view><input class="form-input" type="digit" value="{{nightTargetTemp}}" data-field="nightTargetTemp" bindinput="onInput" /></view>
+      <view><view class="form-label">最低温度（℃）</view><input class="form-input" type="digit" value="{{nightMinTemp}}" data-field="nightMinTemp" bindinput="onInput" /></view>
+      <view><view class="form-label">最高湿度（%）</view><input class="form-input" type="number" value="{{nightHumidity}}" data-field="nightHumidity" bindinput="onInput" /></view>
+    </view>
+    <view class="form-row cols3" style="margin-bottom:8px">
+      <view><view class="form-label">风机数量</view><input class="form-input" type="number" value="{{nightFanCount}}" data-field="nightFanCount" bindinput="onInput" /></view>
+      <view><view class="form-label">循环时间（秒）</view><input class="form-input cycle-input" type="number" value="{{nightCycleTime}}" data-field="nightCycleTime" bindinput="onInput" /></view>
+      <view><view class="form-label">开启时间（秒）</view><input class="form-input" type="number" value="{{nightOpenTime}}" data-field="nightOpenTime" bindinput="onInput" /></view>
+    </view>
+    <view class="form-row cols3">
+      <view><view class="form-label">窗户大小（%）</view><input class="form-input" type="number" value="{{nightWindowSize}}" data-field="nightWindowSize" bindinput="onInput" /></view>
+      <view><view class="form-label">负压（Pa）</view><input class="form-input" type="number" value="{{nightNegativePressure}}" data-field="nightNegativePressure" bindinput="onInput" /></view>
+      <view><view class="form-label">张口率（%）</view><input class="form-input" type="number" value="{{nightOpenMouthRate}}" data-field="nightOpenMouthRate" bindinput="onInput" /></view>
+    </view>
+  </view>
+
+  <!-- 白天环境 -->
+  <view class="card">
+    <view class="card-title">☀️ 白天环境（12:00~15:00）</view>
+    <view class="form-row cols3" style="margin-bottom:8px">
+      <view><view class="form-label">目标温度（℃）</view><input class="form-input" type="digit" value="{{dayTargetTemp}}" data-field="dayTargetTemp" bindinput="onInput" /></view>
+      <view><view class="form-label">最高温度（℃）</view><input class="form-input" type="digit" value="{{dayMaxTemp}}" data-field="dayMaxTemp" bindinput="onInput" /></view>
+      <view><view class="form-label">最低湿度（%）</view><input class="form-input" type="number" value="{{dayHumidity}}" data-field="dayHumidity" bindinput="onInput" /></view>
+    </view>
+    <view class="form-row cols3" style="margin-bottom:8px">
+      <view><view class="form-label">风机数量</view><input class="form-input" type="number" value="{{dayFanCount}}" data-field="dayFanCount" bindinput="onInput" /></view>
+      <view><view class="form-label">循环时间（秒）</view><input class="form-input cycle-input" type="number" value="{{dayCycleTime}}" data-field="dayCycleTime" bindinput="onInput" /></view>
+      <view><view class="form-label">开启时间（秒）</view><input class="form-input" type="number" value="{{dayOpenTime}}" data-field="dayOpenTime" bindinput="onInput" /></view>
+    </view>
+    <view class="form-row cols3">
+      <view><view class="form-label">窗户大小（%）</view><input class="form-input" type="number" value="{{dayWindowSize}}" data-field="dayWindowSize" bindinput="onInput" /></view>
+      <view><view class="form-label">负压（Pa）</view><input class="form-input" type="number" value="{{dayNegativePressure}}" data-field="dayNegativePressure" bindinput="onInput" /></view>
+      <view><view class="form-label">张口率（%）</view><input class="form-input" type="number" value="{{dayOpenMouthRate}}" data-field="dayOpenMouthRate" bindinput="onInput" /></view>
+    </view>
+  </view>
+
+  <!-- 周末填写 -->
+  <view class="card" wx:if="{{isWeekend}}">
+    <view class="card-title">📅 周末填写（生理周末）</view>
+    <view class="form-row cols2">
+      <view>
+        <view class="form-label">周末平均体重（g）</view>
+        <input class="form-input" type="number" value="{{weekendAvgWeight}}" data-field="weekendAvgWeight" bindinput="onInput" />
+      </view>
+      <view>
+        <view class="form-label">库存料量（kg）</view>
+        <input class="form-input" type="number" value="{{weekendStockFeed}}" data-field="weekendStockFeed" bindinput="onInput" />
+      </view>
+    </view>
+  </view>
+
+  <!-- 提交按钮 -->
+  <button class="btn btn-primary" bindtap="saveData" style="margin-bottom:20px">保存</button>
+</view>

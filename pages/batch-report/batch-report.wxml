@@ -1,0 +1,170 @@
+<view class="container">
+  <!-- 返回按钮 -->
+  <view class="back-bar" bindtap="goBack">
+    <text class="back-btn">← 返回</text>
+  </view>
+
+  <!-- 批次信息卡 -->
+  <view class="card batch-info-card">
+    <view class="batch-info-row">
+      <view class="batch-info-cell">
+        <text class="batch-info-label">公司</text>
+        <text class="batch-info-value">{{batch.companyName || '-'}}</text>
+      </view>
+      <view class="batch-info-cell">
+        <text class="batch-info-label">厂区</text>
+        <text class="batch-info-value">{{batch.farm || '-'}}</text>
+      </view>
+      <view class="batch-info-cell">
+        <text class="batch-info-label">栋号</text>
+        <text class="batch-info-value">{{batch.house || '-'}}</text>
+      </view>
+    </view>
+    <view class="batch-info-row">
+      <view class="batch-info-cell">
+        <text class="batch-info-label">品种</text>
+        <text class="batch-info-value">{{batch.variety || '-'}}</text>
+      </view>
+      <view class="batch-info-cell">
+        <text class="batch-info-label">分类</text>
+        <text class="batch-info-value">{{batch.type || '-'}}</text>
+      </view>
+      <view class="batch-info-cell">
+        <text class="batch-info-label">出栏日龄</text>
+        <text class="batch-info-value">{{batch.exitAge || '-'}}天</text>
+      </view>
+    </view>
+    <view class="batch-info-row">
+      <view class="batch-info-cell">
+        <text class="batch-info-label">进鸡日期</text>
+        <text class="batch-info-value">{{batch.entryDateStr || '-'}}</text>
+      </view>
+      <view class="batch-info-cell">
+        <text class="batch-info-label">进鸡数量</text>
+        <text class="batch-info-value">{{batch.initialStock || '-'}}</text>
+      </view>
+      <view class="batch-info-cell">
+        <text class="batch-info-label">出栏均重</text>
+        <text class="batch-info-value">{{batch.exitWeight ? batch.exitWeight + 'g' : '-'}}</text>
+      </view>
+    </view>
+    <view class="batch-info-row">
+      <view class="batch-info-cell">
+        <text class="batch-info-label">累计耗料</text>
+        <text class="batch-info-value">{{batch.totalFeed ? batch.totalFeed + 'kg' : '-'}}</text>
+      </view>
+      <view class="batch-info-cell">
+        <text class="batch-info-label">累计料比</text>
+        <text class="batch-info-value">{{batch.exitFCR || '-'}}</text>
+      </view>
+      <view class="batch-info-cell">
+        <text class="batch-info-label">造肉成本</text>
+        <text class="batch-info-value">{{batch.meatCost ? batch.meatCost + '元/kg' : '-'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 存活率 -->
+  <view class="survival-bar">
+    <text class="survival-label">存活率</text>
+    <text class="survival-value">{{batch.survival ? batch.survival + '%' : '-'}}</text>
+  </view>
+
+  <!-- 日数据汇总 -->
+  <view class="card">
+    <view class="card-title">📋 日数据汇总</view>
+    <scroll-view scroll-x="true" class="table-scroll">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>日龄</th>
+            <th>品种</th>
+            <th>分类</th>
+              <th>存栏（只）</th>
+              <th>当日死亡</th>
+              <th>当日淘汰</th>
+              <th>累计死淘</th>
+              <th>存活率(%)</th>
+              <th>呼吸道(%)</th>
+            <th>体重(g)</th>
+            <th>日增重(g)</th>
+            <th>日耗料(g)</th>
+            <th>日料比</th>
+            <th>累计耗料(g)</th>
+            <th>累计料比</th>
+          </tr>
+        </thead>
+        <tbody>
+          <block wx:for="{{dailyList}}" wx:key="dayAge">
+            <tr>
+              <td>{{item.dayAge}}</td>
+              <td>{{batch.variety || '-'}}</td>
+              <td>{{batch.type || '-'}}</td>
+              <td>{{item.currentStock || '-'}}</td>
+              <td>{{item.deadCount || 0}}</td>
+              <td>{{item.culledCount || 0}}</td>
+              <td>{{item.cumulativeDead || 0}}</td>
+              <td>{{item.survivalRate || '-'}}</td>
+              <td>{{item.respiratoryRate || '-'}}</td>
+              <td>{{item.weightAvg || '-'}}</td>
+              <td>{{item.dailyGain || '-'}}</td>
+              <td>{{item.feedAvg || '-'}}</td>
+              <td>{{item.dailyFCR || '-'}}</td>
+              <td>{{item.cumulativeFeed || '-'}}</td>
+              <td>{{item.cumulativeFCR || '-'}}</td>
+            </tr>
+          </block>
+          <tr wx:if="{{!dailyList || dailyList.length === 0}}">
+            <td colspan="15" class="empty-cell">暂无数据</td>
+          </tr>
+        </tbody>
+      </table>
+    </scroll-view>
+  </view>
+
+  <!-- 周数据汇总 -->
+  <view class="card">
+    <view class="card-title">📑 周数据汇总</view>
+    <scroll-view scroll-x="true" class="table-scroll">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>周零</th>
+            <th>品种</th>
+            <th>分类</th>
+            <th>周末存栏</th>
+            <th>周末体重(g)</th>
+            <th>存活率(%)</th>
+            <th>累计料比</th>
+            <th>累计上料(kg)</th>
+            <th>累计金额(元)</th>
+            <th>饲料单价(元/kg)</th>
+            <th>造肉成本(元/斤)</th>
+            <th>饲料厂家</th>
+          </tr>
+        </thead>
+        <tbody>
+          <block wx:for="{{weekRows}}" wx:key="dayAge">
+            <tr style="{{item.isExit ? 'background:#e6fff0' : ''}}">
+              <td style="{{item.isExit ? 'font-weight:700;color:#52c41a' : ''}}">{{item.isExit ? (item.dayAge ? item.dayAge + '天出栏' : '出栏') : item.label}}</td>
+              <td>{{batch.variety || '-'}}</td>
+              <td>{{batch.type || '-'}}</td>
+              <td>{{item.weekendStock || '-'}}</td>
+              <td>{{item.avgWeight || '-'}}</td>
+              <td>{{item.survivalRate || '-'}}</td>
+              <td>{{item.cumulativeFCR || '-'}}</td>
+              <td>{{item.cumulativeFeed || '-'}}</td>
+              <td>{{item.cumulativeCost || '-'}}</td>
+              <td>{{item.feedPrice || '-'}}</td>
+              <td>{{item.meatCost || '-'}}</td>
+              <td>{{item.feedFactory || '-'}}</td>
+            </tr>
+          </block>
+          <tr wx:if="{{!weekRows || weekRows.length === 0}}">
+            <td colspan="12" class="empty-cell">暂无数据</td>
+          </tr>
+        </tbody>
+      </table>
+    </scroll-view>
+  </view>
+</view>

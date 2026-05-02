@@ -1,0 +1,73 @@
+<view class="container">
+  <!-- 未登录状态：显示登录表单 -->
+  <view class="card login-card" wx:if="{{!isLoggedIn}}">
+    <view class="login-icon">🔐</view>
+    <view class="login-title">扫码绑定登录</view>
+    <view class="login-desc">请先登录后再绑定栋舍</view>
+
+    <!-- 微信一键登录 -->
+    <button class="btn btn-wechat" bindtap="wxLogin" loading="{{wxLogging}}">
+      微信一键登录
+    </button>
+
+    <view class="login-divider">
+      <view class="divider-line"></view>
+      <view class="divider-text">或手机号登录</view>
+      <view class="divider-line"></view>
+    </view>
+
+    <view class="form-item">
+      <view class="form-label">手机号</view>
+      <input class="form-input" type="number" value="{{phone}}" bindinput="onPhoneInput" placeholder="请输入手机号" maxlength="11" />
+    </view>
+
+    <view class="form-row cols2">
+      <input class="form-input" type="number" value="{{verifyCode}}" bindinput="onCodeInput" placeholder="验证码" maxlength="6" />
+      <button class="verify-btn" bindtap="sendVerifyCode" loading="{{sendingCode}}" disabled="{{countdown > 0}}">
+        {{countdown > 0 ? countdown + 's' : '获取验证码'}}
+      </button>
+    </view>
+
+    <button class="btn btn-primary" bindtap="doPhoneLogin" loading="{{loggingIn}}">
+      📱 手机号登录
+    </button>
+
+    <view class="login-tip">未注册手机号将自动创建账号</view>
+  </view>
+
+  <!-- 已登录状态：显示绑定确认 -->
+  <view class="card bind-card" wx:if="{{isLoggedIn}}">
+    <view class="user-info-bar">
+      <view class="user-avatar">{{userInfo.avatarUrl || '🐔'}}</view>
+      <view class="user-detail">
+        <view class="user-nick">{{userInfo.nickName || '微信用户'}}</view>
+        <view class="user-phone">{{phone || ''}}</view>
+      </view>
+      <button class="logout-btn" bindtap="logout">退出</button>
+    </view>
+
+    <view class="divider"></view>
+
+    <view class="bind-desc" style="text-align:center;margin-bottom:16rpx;">是否绑定以下栋舍？</view>
+    
+    <view class="bind-info-box">
+      <view class="bind-info-item">
+        <view class="bind-info-label">厂区</view>
+        <view class="bind-info-value">{{farm}}</view>
+      </view>
+      <view class="bind-info-item">
+        <view class="bind-info-label">栋号</view>
+        <view class="bind-info-value">{{house}}</view>
+      </view>
+    </view>
+    
+    <view class="bind-tip">绑定后可在"数据"页面查看该栋的日报和周报数据</view>
+    
+    <button class="btn btn-success bind-btn" bindtap="doBind" loading="{{binding}}">
+      ✅ 确认绑定
+    </button>
+    <button class="btn btn-default cancel-btn" bindtap="cancelBind">
+      取消
+    </button>
+  </view>
+</view>

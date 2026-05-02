@@ -1,0 +1,42 @@
+{
+  "pages": [
+    "pages/entry/entry",
+    "pages/data/data",
+    "pages/report/report",
+    "pages/settings/settings",
+    "pages/bind-confirm/bind-confirm",
+    "pages/batch-report/batch-report"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTitleText": "养殖数据录入",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#1677ff",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/entry/entry",
+        "text": "录入"
+      },
+      {
+        "pagePath": "pages/data/data",
+        "text": "数据"
+      },
+      {
+        "pagePath": "pages/report/report",
+        "text": "报表"
+      },
+      {
+        "pagePath": "pages/settings/settings",
+        "text": "设置"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "cloud": true
+}

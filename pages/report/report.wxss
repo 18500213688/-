@@ -1,0 +1,202 @@
+/* 报表页样式 */
+page {
+  background-color: #f5f5f5;
+}
+
+.container {
+  padding: 12px 14px 20px;
+}
+
+/* 卡片 */
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 报表Tab切换条 */
+.report-tab-bar {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+  padding: 0 1px;
+}
+
+.tab-btn {
+  flex: 1;
+  height: 36px;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 8px;
+  background: #fff;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tab-btn.active {
+  background: #1677ff;
+  border-color: #1677ff;
+  color: #fff;
+}
+
+/* 提示条 */
+.info-bar {
+  background: #f0f5ff;
+  border: 1px solid #adc6ff;
+  color: #1677ff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+/* 筛选行 */
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.filter-row .form-input {
+  flex: 1;
+  height: 36px;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 0 10px;
+  font-size: 14px;
+  background: #fff;
+}
+
+.filter-sep {
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* 表格 */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.table th {
+  background: #f5f5f5;
+  color: #666;
+  padding: 8px 6px;
+  text-align: center;
+  font-weight: 500;
+  border-bottom: 1px solid #e8e8e8;
+  position: sticky;
+  top: 0;
+}
+
+.table td {
+  padding: 8px 6px;
+  text-align: center;
+  border-bottom: 1px solid #f0f0f0;
+  color: #333;
+  font-size: 11px;
+}
+
+/* 空数据 */
+.empty-cell {
+  color: #999;
+  font-size: 12px;
+  padding: 20px 0;
+}
+
+.empty-tip {
+  text-align: center;
+  color: #999;
+  font-size: 12px;
+  padding: 20px 0;
+}
+
+/* 历史列表 */
+.history-list {
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.history-item {
+  padding: 12px;
+  border-bottom: 1px solid #e8e8e8;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.history-item:last-child {
+  border-bottom: none;
+}
+
+.history-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.history-date {
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+}
+
+.history-desc {
+  font-size: 10px;
+  color: #999;
+}
+
+.history-arrow {
+  font-size: 11px;
+  color: #1677ff;
+}
+
+/* 按钮 */
+.btn {
+  width: 100%;
+  height: 46px;
+  border-radius: 23px;
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #1677ff, #4096ff);
+  color: #fff;
+}
+
+.btn-sm {
+  height: 38px;
+  font-size: 14px;
+  border-radius: 8px;
+}

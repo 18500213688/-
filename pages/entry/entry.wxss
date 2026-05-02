@@ -1,0 +1,38 @@
+/* 录入页样式 */
+page {
+  background-color: #f5f5f5;
+}
+
+.container {
+  padding: 12px 14px 20px;
+}
+
+/* 批次信息条 */
+.batch-bar {
+  background: linear-gradient(135deg, #e6f7ff, #f6ffed);
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  color: #333;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: center;
+}
+.batch-variety {
+  font-weight: 600;
+}
+.batch-type {
+  color: #1677ff;
+}
+.batch-qty {
+}
+.batch-date {
+}
+
+/* 循环时间自动记忆样式 */
+.cycle-input {
+  background-color: #fafff0 !important;
+  border-color: #d9f7be !important;
+}

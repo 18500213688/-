@@ -1,0 +1,133 @@
+/* 批次报表页样式 */
+page {
+  background-color: #f5f5f5;
+}
+
+.container {
+  padding: 12px 14px 20px;
+}
+
+/* 返回条 */
+.back-bar {
+  margin-bottom: 10px;
+}
+
+.back-btn {
+  font-size: 14px;
+  color: #1677ff;
+}
+
+/* 卡片 */
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 批次信息卡 */
+.batch-info-card {
+  background: #fff;
+}
+
+.batch-info-row {
+  display: flex;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.batch-info-row:last-child {
+  border-bottom: none;
+}
+
+.batch-info-cell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.batch-info-label {
+  font-size: 10px;
+  color: #999;
+  margin-bottom: 2px;
+}
+
+.batch-info-value {
+  font-size: 13px;
+  color: #333;
+  font-weight: 600;
+}
+
+/* 存活率条 */
+.survival-bar {
+  background: linear-gradient(135deg, #52c41a, #73d13d);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+}
+
+.survival-label {
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.survival-value {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* 表格 */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.table th {
+  background: #f5f5f5;
+  color: #666;
+  padding: 8px 6px;
+  text-align: center;
+  font-weight: 500;
+  border-bottom: 1px solid #e8e8e8;
+  position: sticky;
+  top: 0;
+  font-size: 10px;
+}
+
+.table td {
+  padding: 8px 6px;
+  text-align: center;
+  border-bottom: 1px solid #f0f0f0;
+  color: #333;
+  font-size: 11px;
+}
+
+.empty-cell {
+  color: #999;
+  font-size: 12px;
+  padding: 20px 0;
+}

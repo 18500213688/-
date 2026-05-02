@@ -1,0 +1,266 @@
+/* 数据页样式 */
+page {
+  background-color: #f5f5f5;
+}
+
+.container {
+  padding: 12px 14px 20px;
+}
+
+/* 顶部三行信息卡 */
+.top-info-card {
+  margin-bottom: 10px;
+  padding: 10px 12px;
+}
+
+.top-row {
+  display: flex;
+  align-items: center;
+  padding: 5px 0;
+}
+
+.top-row:not(:last-child) {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.top-row3 {
+  gap: 8px;
+}
+
+.top-row2 {
+  gap: 8px;
+}
+
+.top-row-survival {
+  justify-content: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.survival-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.survival-label {
+  font-size: 11px;
+  color: #999;
+  margin-bottom: 2px;
+}
+
+.survival-value {
+  font-size: 18px;
+  color: #52c41a;
+  font-weight: 700;
+}
+
+
+
+.top-cell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.top-label {
+  font-size: 10px;
+  color: #aaa;
+  margin-bottom: 2px;
+}
+
+.top-value {
+  font-size: 13px;
+  color: #333;
+  font-weight: 600;
+  text-align: center;
+}
+
+.top-input {
+  height: 24px;
+  background: #f0f0f0;
+  border-radius: 4px;
+  padding: 0 4px;
+  font-size: 13px;
+  text-align: center;
+  color: #1677ff;
+  font-weight: 600;
+}
+
+.calc-input {
+  background: #e8f4ff !important;
+  color: #1677ff !important;
+  font-weight: 600;
+}
+
+/* 今日汇总卡片 */
+.summary-card {
+  background: linear-gradient(135deg, #0969da, #4096ff);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.summary-header {
+  font-size: 13px;
+  opacity: 0.9;
+  margin-bottom: 12px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.summary-item {
+  background: rgba(255,255,255,0.18);
+  border-radius: 8px;
+  padding: 8px 6px;
+  text-align: center;
+}
+
+.summary-item .summary-v {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.summary-item .summary-l {
+  font-size: 10px;
+  opacity: 0.8;
+  margin-top: 2px;
+}
+
+.summary-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.summary-sm {
+  background: rgba(255,255,255,0.12);
+  border-radius: 6px;
+  padding: 6px;
+  text-align: center;
+}
+
+.summary-sm .summary-sm-v {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.summary-sm .summary-sm-l {
+  font-size: 10px;
+  opacity: 0.75;
+  margin-top: 1px;
+}
+
+/* 环控数据卡片 */
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+}
+
+.card-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.env-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.env-item {
+  background: #f8f8f8;
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 11px;
+  color: #666;
+}
+
+.env-item text {
+  font-weight: 600;
+  color: #333;
+  float: right;
+}
+
+/* 录入表单 */
+.entry-card {
+  margin-bottom: 10px;
+}
+
+.form-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.form-row > view {
+  flex: 1;
+}
+
+.form-label {
+  font-size: 11px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.form-input {
+  height: 32px;
+  padding: 0 8px;
+  background: #fafafa;
+  border: 1px solid #e8e8e8;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.form-row.cols2 > view .form-input,
+.form-row.cols3 > view .form-input {
+  height: 30px;
+  font-size: 12px;
+}
+
+/* 批次信息卡片 */
+.batch-info-card {
+  margin-bottom: 10px;
+  padding: 12px;
+}
+
+.batch-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.batch-info-row:last-child {
+  border-bottom: none;
+}
+
+.batch-label {
+  font-size: 13px;
+  color: #666;
+}
+
+.batch-value {
+  font-size: 13px;
+  color: #333;
+  font-weight: 500;
+}
+
+.batch-value.day-age {
+  color: #1677ff;
+  font-size: 16px;
+  font-weight: 600;
+}

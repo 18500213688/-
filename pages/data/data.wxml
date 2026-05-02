@@ -1,0 +1,268 @@
+<view class="container">
+  <!-- 顶部信息卡 -->
+  <view class="card top-info-card">
+    <!-- 存活率行 -->
+    <view class="top-row top-row-survival">
+      <view class="survival-item">
+        <text class="survival-label">存活率</text>
+        <text class="survival-value">{{survivalRate != null && survivalRate !== '' ? survivalRate : 100}}%</text>
+      </view>
+    </view>
+    <!-- 第一行：公司 厂区 栋号 -->
+    <view class="top-row top-row3">
+      <view class="top-cell">
+        <text class="top-label">公司</text>
+        <text class="top-value">{{companyName || '-'}}</text>
+      </view>
+      <view class="top-cell">
+        <text class="top-label">厂区</text>
+        <text class="top-value">{{companyFarm || '-'}}</text>
+      </view>
+      <view class="top-cell">
+        <text class="top-label">栋号</text>
+        <text class="top-value">{{companyHouse || '-'}}</text>
+      </view>
+    </view>
+    <!-- 第二行：品种 厂家 分类 -->
+    <view class="top-row top-row3">
+      <view class="top-cell">
+        <text class="top-label">品种</text>
+        <text class="top-value">{{variety || '-'}}</text>
+      </view>
+      <view class="top-cell">
+        <text class="top-label">厂家</text>
+        <text class="top-value">{{companyName || '-'}}</text>
+      </view>
+      <view class="top-cell">
+        <text class="top-label">分类</text>
+        <text class="top-value">{{type || '-'}}</text>
+      </view>
+    </view>
+    <!-- 第三行：入舍日期 入舍数量 日龄 -->
+    <view class="top-row top-row3">
+      <view class="top-cell">
+        <text class="top-label">入舍日期</text>
+        <text class="top-value">{{entryDate || '-'}}</text>
+      </view>
+      <view class="top-cell">
+        <text class="top-label">入舍数量</text>
+        <text class="top-value">{{initialStock || '-'}}</text>
+      </view>
+      <view class="top-cell">
+        <text class="top-label">日龄</text>
+        <input class="top-input" type="number" value="{{dayAge}}" bindinput="onDayAgeInput" placeholder="填" />
+      </view>
+    </view>
+  </view>
+
+  <!-- 录入表单 -->
+  <view class="card entry-card">
+    <view class="card-title">📝 日数据录入</view>
+    
+    <view class="form-row cols3">
+      <view>
+        <view class="form-label">死亡（只）</view>
+        <input class="form-input" type="number" value="{{deadCount}}" bindinput="onDeadInput" placeholder="0" />
+      </view>
+      <view>
+        <view class="form-label">淘汰（只）</view>
+        <input class="form-input" type="number" value="{{culledCount}}" bindinput="onCulledInput" placeholder="0" />
+      </view>
+      <view>
+        <view class="form-label">存栏（只）</view>
+        <input class="form-input" type="number" value="{{currentStock}}" bindinput="onCurrentStockInput" placeholder="填" />
+      </view>
+    </view>
+
+    <view class="form-row cols3">
+      <view>
+        <view class="form-label">呼吸道比例（%）</view>
+        <input class="form-input" type="digit" value="{{respRate}}" bindinput="onRespRateInput" placeholder="0" />
+      </view>
+    </view>
+
+    <view class="form-row cols2">
+      <view>
+        <view class="form-label">平均体重（g）</view>
+        <input class="form-input calc-input" type="digit" value="{{weightAvg}}" disabled placeholder="自动" />
+      </view>
+      <view>
+        <view class="form-label">日增重（g）</view>
+        <input class="form-input calc-input" type="digit" value="{{dailyGain}}" disabled placeholder="自动" />
+      </view>
+    </view>
+
+    <view class="form-row cols3">
+      <view>
+        <view class="form-label">前（g）</view>
+        <input class="form-input" type="digit" value="{{weightFront}}" data-field="weightFront" bindinput="onWeightInput" placeholder="0" />
+      </view>
+      <view>
+        <view class="form-label">中（g）</view>
+        <input class="form-input" type="digit" value="{{weightMiddle}}" data-field="weightMiddle" bindinput="onWeightInput" placeholder="0" />
+      </view>
+      <view>
+        <view class="form-label">后（g）</view>
+        <input class="form-input" type="digit" value="{{weightRear}}" data-field="weightRear" bindinput="onWeightInput" placeholder="0" />
+      </view>
+    </view>
+
+    <view class="form-row cols2">
+      <view>
+        <view class="form-label">日耗料（g）</view>
+        <input class="form-input calc-input" type="digit" value="{{feedAvg}}" disabled placeholder="自动" />
+      </view>
+      <view>
+        <view class="form-label">日料比</view>
+        <input class="form-input calc-input" type="digit" value="{{dailyFCR}}" disabled placeholder="自动" />
+      </view>
+    </view>
+
+    <view class="form-row cols3">
+      <view>
+        <view class="form-label">前（g）</view>
+        <input class="form-input" type="digit" value="{{feedFront}}" data-field="feedFront" bindinput="onFeedInput" placeholder="0" />
+      </view>
+      <view>
+        <view class="form-label">中（g）</view>
+        <input class="form-input" type="digit" value="{{feedMiddle}}" data-field="feedMiddle" bindinput="onFeedInput" placeholder="0" />
+      </view>
+      <view>
+        <view class="form-label">后（g）</view>
+        <input class="form-input" type="digit" value="{{feedRear}}" data-field="feedRear" bindinput="onFeedInput" placeholder="0" />
+      </view>
+    </view>
+
+    <view class="form-row cols3">
+      <view>
+        <view class="form-label">夜间目标温（℃）</view>
+        <input class="form-input" type="digit" value="{{nightTargetTemp}}" bindinput="onNightTargetTempInput" placeholder="0" />
+      </view>
+      <view>
+        <view class="form-label">夜间湿度（%）</view>
+        <input class="form-input" type="digit" value="{{nightHumidity}}" bindinput="onNightHumidityInput" placeholder="0" />
+      </view>
+      <view>
+        <view class="form-label">夜间张口率（%）</view>
+        <input class="form-input" type="digit" value="{{nightOpenMouthRate}}" bindinput="onNightOpenMouthRateInput" placeholder="0" />
+      </view>
+    </view>
+
+    <view class="form-row cols3">
+      <view>
+        <view class="form-label">白天目标温（℃）</view>
+        <input class="form-input" type="digit" value="{{dayTargetTemp}}" bindinput="onDayTargetTempInput" placeholder="0" />
+      </view>
+      <view>
+        <view class="form-label">白天湿度（%）</view>
+        <input class="form-input" type="digit" value="{{dayHumidity}}" bindinput="onDayHumidityInput" placeholder="0" />
+      </view>
+      <view>
+        <view class="form-label">白天张口率（%）</view>
+        <input class="form-input" type="digit" value="{{dayOpenMouthRate}}" bindinput="onDayOpenMouthRateInput" placeholder="0" />
+      </view>
+    </view>
+
+    <!-- 饲料数据 -->
+    <view class="form-row cols3">
+      <view>
+        <view class="form-label">当日上料量（千克）</view>
+        <input class="form-input" type="digit" value="{{feedAmount}}" bindinput="onFeedAmountInput" placeholder="0" />
+      </view>
+      <view>
+        <view class="form-label">饲料单价（元/吨）</view>
+        <input class="form-input" type="digit" value="{{feedPrice}}" bindinput="onFeedPriceInput" placeholder="0" />
+      </view>
+      <view>
+        <view class="form-label">饲料金额（元）</view>
+        <input class="form-input calc-input" type="digit" value="{{feedCost}}" disabled placeholder="自动" />
+      </view>
+    </view>
+
+    <view class="form-row cols2">
+      <view>
+        <view class="form-label">累计上料量（千克）</view>
+        <input class="form-input calc-input" type="digit" value="{{totalFeedAmount}}" disabled placeholder="自动" />
+      </view>
+      <view>
+        <view class="form-label">累计上料金额（元）</view>
+        <input class="form-input calc-input" type="digit" value="{{totalFeedCost}}" disabled placeholder="自动" />
+      </view>
+    </view>
+
+    <view class="form-row cols2">
+      <view>
+        <view class="form-label">呼吸道比例（%）</view>
+        <input class="form-input" type="digit" value="{{respRate}}" bindinput="onRespRateInput" placeholder="0" />
+      </view>
+    </view>
+
+    <button class="btn btn-success" bindtap="saveData" loading="{{saving}}">💾 保存数据</button>
+  </view>
+
+  <!-- 今日汇总 -->
+  <view class="summary-card">
+    <view class="summary-header">📊 今日汇总 · 第 {{dayAge}} 天 · {{today.dateStr}}</view>
+    <view class="summary-grid">
+      <view class="summary-item"><view class="summary-v">{{currentStock}}</view><view class="summary-l">存栏(只)</view></view>
+      <view class="summary-item"><view class="summary-v">{{today.deadCount || 0}}</view><view class="summary-l">当日死淘(只)</view></view>
+      <view class="summary-item"><view class="summary-v">{{today.weightAvg || '-'}}</view><view class="summary-l">平均体重(g)</view></view>
+    </view>
+    <view class="summary-row">
+      <view class="summary-sm"><view class="summary-sm-v">{{today.dailyGain || '-'}}</view><view class="summary-sm-l">日增重(g)</view></view>
+      <view class="summary-sm"><view class="summary-sm-v">{{today.feedAvg || '-'}}</view><view class="summary-sm-l">日耗料(g)</view></view>
+      <view class="summary-sm"><view class="summary-sm-v">{{today.dailyFCR || '-'}}</view><view class="summary-sm-l">日料比</view></view>
+      <view class="summary-sm"><view class="summary-sm-v">{{survivalRate != null && survivalRate !== '' ? survivalRate : '-'}}</view><view class="summary-sm-l">存活率(%)</view></view>
+    </view>
+  </view>
+
+  <!-- 体重数据 -->
+  <view class="card">
+    <view class="card-title">⚖️ 体重数据（g）</view>
+    <view class="env-grid">
+      <view class="env-item">前 <text style="color:#1677ff">{{today.weightFront || '-'}}</text></view>
+      <view class="env-item">中 <text style="color:#1677ff">{{today.weightMiddle || '-'}}</text></view>
+      <view class="env-item">后 <text style="color:#1677ff">{{today.weightRear || '-'}}</text></view>
+    </view>
+  </view>
+
+  <!-- 夜间环控 -->
+  <view class="card">
+    <view class="card-title">🌙 夜间环控（0~3点）</view>
+    <view class="env-grid">
+      <view class="env-item">目标温度（℃）<text>{{today.nightTargetTemp || '-'}}</text></view>
+      <view class="env-item">最低温度（℃）<text>{{today.nightMinTemp || '-'}}</text></view>
+      <view class="env-item">最高湿度（%）<text>{{today.nightHumidity || '-'}}</text></view>
+    </view>
+    <view class="env-grid">
+      <view class="env-item">风机数量（台）<text>{{today.nightFanCount || '-'}}</text></view>
+      <view class="env-item">循环时间（秒）<text>{{today.nightCycleTime || '-'}}</text></view>
+      <view class="env-item">开启时间（秒）<text>{{today.nightOpenTime || '-'}}</text></view>
+    </view>
+    <view class="env-grid">
+      <view class="env-item">窗户大小（%）<text>{{today.nightWindowSize || '-'}}</text></view>
+      <view class="env-item">负压（Pa）<text>{{today.nightNegativePressure || '-'}}</text></view>
+      <view class="env-item">张口率（%）<text style="color:#52c41a">{{today.nightOpenMouthRate || '-'}}</text></view>
+    </view>
+  </view>
+
+  <!-- 白天环控 -->
+  <view class="card">
+    <view class="card-title">☀️ 白天环控（12~15点）</view>
+    <view class="env-grid">
+      <view class="env-item">目标温度（℃）<text>{{today.dayTargetTemp || '-'}}</text></view>
+      <view class="env-item">最高温度（℃）<text>{{today.dayMaxTemp || '-'}}</text></view>
+      <view class="env-item">最低湿度（%）<text>{{today.dayHumidity || '-'}}</text></view>
+    </view>
+    <view class="env-grid">
+      <view class="env-item">风机数量（台）<text>{{today.dayFanCount || '-'}}</text></view>
+      <view class="env-item">循环时间（秒）<text>{{today.dayCycleTime || '-'}}</text></view>
+      <view class="env-item">开启时间（秒）<text>{{today.dayOpenTime || '-'}}</text></view>
+    </view>
+    <view class="env-grid">
+      <view class="env-item">窗户大小（%）<text>{{today.dayWindowSize || '-'}}</text></view>
+      <view class="env-item">负压（Pa）<text>{{today.dayNegativePressure || '-'}}</text></view>
+      <view class="env-item">张口率（%）<text style="color:#fa8c16">{{today.dayOpenMouthRate || '-'}}</text></view>
+    </view>
+  </view>
+</view>
