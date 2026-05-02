@@ -223,9 +223,15 @@ Page({
             weightFront: d.weightFront || '',
             weightMiddle: d.weightMiddle || '',
             weightRear: d.weightRear || '',
+            weightAvg: d.weightAvg || '',
+            gainFront: d.gainFront || '',
+            gainMiddle: d.gainMiddle || '',
+            gainRear: d.gainRear || '',
+            gainAvg: d.gainAvg || '',
             feedFront: d.feedFront || '',
             feedMiddle: d.feedMiddle || '',
             feedRear: d.feedRear || '',
+            feedAvg: d.feedAvg || '',
             nightTargetTemp: d.nightTargetTemp || '',
             nightMinTemp: d.nightMinTemp || '',
             nightHumidity: d.nightHumidity || '',
@@ -249,6 +255,7 @@ Page({
             dayHint: '✅ 第' + day + '天历史数据已回填，可修改后重新保存'
           });
           that.calculateWeightAvg();
+          that.calculateGainAvg();
           that.calculateFeedAvg();
         } else {
           that.clearFormKeepDay();
@@ -282,11 +289,15 @@ Page({
       weightFront: '',
       weightMiddle: '',
       weightRear: '',
-      weightAvg: 0,
+      weightAvg: '',
+      gainFront: '',
+      gainMiddle: '',
+      gainRear: '',
+      gainAvg: '',
       feedFront: '',
       feedMiddle: '',
       feedRear: '',
-      feedAvg: 0,
+      feedAvg: '',
       nightTargetTemp: '',
       nightMinTemp: '',
       nightHumidity: '',
