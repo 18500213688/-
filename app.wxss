@@ -44,6 +44,10 @@ page {
   flex: 1;
 }
 
+.form-row.cols4 > view {
+  flex: 1;
+}
+
 .form-label {
   font-size: 11px;
   color: #999;
