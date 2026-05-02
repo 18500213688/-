@@ -44,9 +44,9 @@
         <input class="form-input" type="number" value="{{currentStock}}" data-field="currentStock" bindinput="onInput"
                style="border-color:#52c41a;font-weight:600;text-align:center" />
       </view>
-      <view style="flex:1;text-align:center">
-        <view class="form-label">存活率</view>
-        <view style="font-size:18px;font-weight:600;color:#1677ff;padding:6px 0">{{survivalRate}}%</view>
+      <view style="flex:1">
+        <view class="form-label">存活率(%)</view>
+        <input class="form-input" value="{{survivalRate}}" data-field="survivalRate" bindinput="onInput" style="text-align:center;font-weight:600;color:#1677ff" />
       </view>
     </view>
     <view class="hint" style="margin-bottom:10px">💡 输入日龄后可回填历史数据</view>
@@ -64,7 +64,7 @@
       </view>
       <view>
         <view class="form-label">死淘（只）</view>
-        <input class="form-input" value="{{deadCullTotal}}" disabled style="background:#fff7e6;color:#fa8c16;font-weight:600" />
+        <input class="form-input" value="{{deadCullTotal}}" data-field="deadCullTotal" bindinput="onInput" style="text-align:center;font-weight:600;color:#fa8c16" />
       </view>
       <view>
         <view class="form-label">呼吸道（%）</view>
@@ -84,17 +84,17 @@
       </view>
       <view>
         <view class="form-label">上料金额（元）</view>
-        <input class="form-input" value="{{feedCost}}" disabled style="background:#f0f5ff;color:#1677ff;font-weight:600" />
+        <input class="form-input" value="{{feedCost}}" data-field="feedCost" bindinput="onFeedInput" style="text-align:center;font-weight:600;color:#1677ff" />
       </view>
     </view>
     <view class="form-row cols3">
       <view>
         <view class="form-label">累计上料量（kg）</view>
-        <input class="form-input" value="{{cumulativeFeed}}" disabled style="background:#f6ffed;color:#52c41a;font-weight:600" />
+        <input class="form-input" value="{{cumulativeFeed}}" data-field="cumulativeFeed" bindinput="onFeedInput" style="text-align:center;font-weight:600;color:#52c41a" />
       </view>
       <view>
         <view class="form-label">累计上料金额（元）</view>
-        <input class="form-input" value="{{cumulativeFeedCost}}" disabled style="background:#f6ffed;color:#52c41a;font-weight:600" />
+        <input class="form-input" value="{{cumulativeFeedCost}}" data-field="cumulativeFeedCost" bindinput="onFeedInput" style="text-align:center;font-weight:600;color:#52c41a" />
       </view>
       <view>
         <view class="form-label">饲料厂家</view>
@@ -106,7 +106,7 @@
   <!-- 体重数据 -->
   <view class="card">
     <view class="card-title">⚖️ 体重数据（g）</view>
-    <view class="form-row cols3">
+    <view class="form-row cols4">
       <view>
         <view class="form-label">前</view>
         <input class="form-input" type="number" value="{{weightFront}}" data-field="weightFront" bindinput="calculateWeightAvg" style="text-align:center;font-weight:600" />
@@ -119,14 +119,40 @@
         <view class="form-label">后</view>
         <input class="form-input" type="number" value="{{weightRear}}" data-field="weightRear" bindinput="calculateWeightAvg" style="text-align:center;font-weight:600" />
       </view>
+      <view>
+        <view class="form-label">平均体重</view>
+        <input class="form-input" value="{{weightAvg}}" data-field="weightAvg" bindinput="onInput" style="text-align:center;font-weight:600;color:#1677ff" />
+      </view>
     </view>
-    <view class="hint">💡 填1~3个点，自动算平均：{{weightAvg}}g</view>
   </view>
 
-  <!-- 耗料数据 -->
+  <!-- 日增重数据 -->
   <view class="card">
-    <view class="card-title">🍽️ 耗料数据（g）</view>
-    <view class="form-row cols3">
+    <view class="card-title">📈 日增重（g）</view>
+    <view class="form-row cols4">
+      <view>
+        <view class="form-label">前</view>
+        <input class="form-input" type="number" value="{{gainFront}}" data-field="gainFront" bindinput="calculateGainAvg" style="text-align:center;font-weight:600" />
+      </view>
+      <view>
+        <view class="form-label">中</view>
+        <input class="form-input" type="number" value="{{gainMiddle}}" data-field="gainMiddle" bindinput="calculateGainAvg" style="text-align:center;font-weight:600" />
+      </view>
+      <view>
+        <view class="form-label">后</view>
+        <input class="form-input" type="number" value="{{gainRear}}" data-field="gainRear" bindinput="calculateGainAvg" style="text-align:center;font-weight:600" />
+      </view>
+      <view>
+        <view class="form-label">平均日增重</view>
+        <input class="form-input" value="{{gainAvg}}" data-field="gainAvg" bindinput="onInput" style="text-align:center;font-weight:600;color:#52c41a" />
+      </view>
+    </view>
+  </view>
+
+  <!-- 日耗料数据 -->
+  <view class="card">
+    <view class="card-title">🍽️ 日耗料（g）</view>
+    <view class="form-row cols4">
       <view>
         <view class="form-label">前</view>
         <input class="form-input" type="number" value="{{feedFront}}" data-field="feedFront" bindinput="calculateFeedAvg" style="text-align:center;font-weight:600" />
@@ -139,8 +165,11 @@
         <view class="form-label">后</view>
         <input class="form-input" type="number" value="{{feedRear}}" data-field="feedRear" bindinput="calculateFeedAvg" style="text-align:center;font-weight:600" />
       </view>
+      <view>
+        <view class="form-label">平均日耗料</view>
+        <input class="form-input" value="{{feedAvg}}" data-field="feedAvg" bindinput="onInput" style="text-align:center;font-weight:600;color:#fa8c16" />
+      </view>
     </view>
-    <view class="hint">💡 填1~3个点，自动算平均：{{feedAvg}}g</view>
   </view>
 
   <!-- 夜间环境 -->

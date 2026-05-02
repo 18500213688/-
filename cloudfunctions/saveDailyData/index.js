@@ -22,6 +22,10 @@ exports.main = async (event, context) => {
     weightMiddle,
     weightRear,
     weightAvg,
+    gainFront,
+    gainMiddle,
+    gainRear,
+    gainAvg,
     feedFront,
     feedMiddle,
     feedRear,
@@ -128,13 +132,19 @@ exports.main = async (event, context) => {
       weightFront: weightFront || '',
       weightMiddle: weightMiddle || '',
       weightRear: weightRear || '',
-      weightAvg: wAvg,
+      weightAvg: weightAvg || '',
 
-      // 耗料
+      // 日增重
+      gainFront: gainFront || '',
+      gainMiddle: gainMiddle || '',
+      gainRear: gainRear || '',
+      gainAvg: gainAvg || '',
+
+      // 日耗料
       feedFront: feedFront || '',
       feedMiddle: feedMiddle || '',
       feedRear: feedRear || '',
-      feedAvg: fAvg,
+      feedAvg: feedAvg || '',
 
       // 上料
       feedAmount: feedAmount || '',        // 当日上料量（kg）

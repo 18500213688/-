@@ -37,13 +37,19 @@ Page({
     weightFront: '',
     weightMiddle: '',
     weightRear: '',
-    weightAvg: 0,
+    weightAvg: '',
 
-    // 耗料数据
+    // 日增重数据
+    gainFront: '',
+    gainMiddle: '',
+    gainRear: '',
+    gainAvg: '',
+
+    // 日耗料数据
     feedFront: '',
     feedMiddle: '',
     feedRear: '',
-    feedAvg: 0,
+    feedAvg: '',
 
     // 夜间环境数据
     nightTargetTemp: '',
@@ -363,6 +369,15 @@ Page({
     }
   },
 
+  // 计算日增重平均值
+  calculateGainAvg: function() {
+    const gains = [parseFloat(this.data.gainFront), parseFloat(this.data.gainMiddle), parseFloat(this.data.gainRear)].filter(g => !isNaN(g) && g > 0);
+    if (gains.length > 0) {
+      const avg = gains.reduce((a, b) => a + b, 0) / gains.length;
+      this.setData({ gainAvg: avg.toFixed(1) });
+    }
+  },
+
   // 计算耗料平均值
   calculateFeedAvg: function() {
     const feeds = [parseFloat(this.data.feedFront), parseFloat(this.data.feedMiddle), parseFloat(this.data.feedRear)].filter(f => !isNaN(f) && f > 0);
@@ -490,11 +505,15 @@ Page({
         weightFront: that.data.weightFront || '',
         weightMiddle: that.data.weightMiddle || '',
         weightRear: that.data.weightRear || '',
-        weightAvg: that.data.weightAvg || 0,
+        weightAvg: that.data.weightAvg || '',
+        gainFront: that.data.gainFront || '',
+        gainMiddle: that.data.gainMiddle || '',
+        gainRear: that.data.gainRear || '',
+        gainAvg: that.data.gainAvg || '',
         feedFront: that.data.feedFront || '',
         feedMiddle: that.data.feedMiddle || '',
         feedRear: that.data.feedRear || '',
-        feedAvg: that.data.feedAvg || 0,
+        feedAvg: that.data.feedAvg || '',
         nightTargetTemp: that.data.nightTargetTemp || '',
         nightMinTemp: that.data.nightMinTemp || '',
         nightHumidity: that.data.nightHumidity || '',
