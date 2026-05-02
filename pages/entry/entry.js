@@ -315,18 +315,26 @@ Page({
     const field = e.currentTarget.dataset.field;
     const val = e.detail.value;
     const data = { [field]: val };
-    
-    // 死亡或淘汰变化时，自动算死淘合计
+
+    // 死亡或淘汰变化时，自动算死淘合计，并重新计算存栏
     if (field === 'deadCount' || field === 'culledCount') {
       const d = field === 'deadCount' ? parseInt(val) || 0 : parseInt(this.data.deadCount) || 0;
       const c = field === 'culledCount' ? parseInt(val) || 0 : parseInt(this.data.culledCount) || 0;
       data.deadCullTotal = d + c;
+
+      // 自动计算存栏 = 入舍数量 - 累计死淘
+      const localBatch = wx.getStorageSync('currentBatch');
+      const batch = localBatch || app.globalData.currentBatch;
+      if (batch && batch.initialStock) {
+        const initialStock = parseInt(batch.initialStock) || 0;
+        // 获取历史累计死淘
+        this.calculateAutoStock(initialStock, d + c);
+      }
     }
-    
-    // 存栏变化时，自动计算存活率
+
+    // 存栏手动修改时，自动计算存活率
     if (field === 'currentStock') {
       const stock = parseInt(val) || 0;
-      // 优先从本地存储获取批次信息
       const localBatch = wx.getStorageSync('currentBatch');
       const batch = localBatch || app.globalData.currentBatch;
       if (batch && batch.initialStock) {
@@ -337,13 +345,50 @@ Page({
         }
       }
     }
-    
+
     this.setData(data);
-    
+
     // 日龄变化时触发回填检查
     if (field === 'dayAge') {
       this.onDayChange();
     }
+  },
+
+  // 自动计算存栏（入舍数量 - 累计死淘）
+  calculateAutoStock: function(initialStock, todayDeadCull) {
+    const that = this;
+    const batch = app.globalData.currentBatch;
+    if (!batch) return;
+
+    const currentDayAge = parseInt(this.data.dayAge) || 0;
+
+    // 查询历史死淘数据
+    const db = wx.cloud.database();
+    db.collection('daily_data')
+      .where({
+        batchId: batch._id,
+        dayAge: db.command.lt(currentDayAge)
+      })
+      .get({
+        success: res => {
+          let totalDeadCull = 0;
+          (res.data || []).forEach(item => {
+            totalDeadCull += (parseInt(item.deadCount) || 0) + (parseInt(item.culledCount) || 0);
+          });
+
+          // 加上今天的死淘
+          totalDeadCull += todayDeadCull;
+
+          // 计算存栏
+          const currentStock = initialStock - totalDeadCull;
+          const survivalRate = initialStock > 0 ? ((currentStock / initialStock) * 100).toFixed(1) : '0.0';
+
+          that.setData({
+            currentStock: currentStock,
+            survivalRate: survivalRate
+          });
+        }
+      });
   },
 
   // 手动计算存活率（根据当前存栏和入舍数量）
@@ -409,56 +454,49 @@ Page({
     this.calculateCumulativeFeed();
   },
 
-  // 计算累计上料量和金额
+  // 计算累计上料量和金额（从0日龄累计到当前日龄）
   calculateCumulativeFeed: function() {
     const that = this;
     const batch = app.globalData.currentBatch;
     if (!batch) return;
-    
+
     const currentDayAge = parseInt(this.data.dayAge) || 0;
-    
-    // 查询历史数据计算累计
-    wx.cloud.callFunction({
-      name: 'getDailyData',
-      data: { 
-        batchId: batch._id, 
-        dayAge: 0, 
-        getAll: true 
-      },
-      success: res => {
-        let totalFeed = 0;
-        let totalCost = 0;
-        
-        if (res.result && res.result.list) {
-          res.result.list.forEach(item => {
-            const dayAge = parseInt(item.dayAge);
-            // 只累加小于当前日龄的数据
-            if (dayAge < currentDayAge) {
-              totalFeed += parseFloat(item.feedAmount) || 0;
-              // 计算历史金额
-              const amount = parseFloat(item.feedAmount) || 0;
-              const price = parseFloat(item.feedPrice) || 0;
-              if (amount > 0 && price > 0) {
-                totalCost += (amount * price / 1000);
-              }
-            }
+
+    // 查询历史数据计算累计（从0到当前日龄）
+    const db = wx.cloud.database();
+    db.collection('daily_data')
+      .where({
+        batchId: batch._id,
+        dayAge: db.command.lte(currentDayAge)
+      })
+      .get({
+        success: res => {
+          let totalFeed = 0;
+          let totalCost = 0;
+
+          // 累加历史数据（0到当前日龄）
+          (res.data || []).forEach(item => {
+            totalFeed += parseFloat(item.feedAmount) || 0;
+            totalCost += parseFloat(item.feedCost) || 0;
+          });
+
+          // 加上今天的上料（如果今天数据还没保存）
+          const todayAmount = parseFloat(that.data.feedAmount) || 0;
+          const todayCost = parseFloat(that.data.feedCost) || 0;
+
+          // 检查今天是否已保存
+          const todaySaved = (res.data || []).some(item => item.dayAge === currentDayAge);
+          if (!todaySaved && todayAmount > 0) {
+            totalFeed += todayAmount;
+            totalCost += todayCost;
+          }
+
+          that.setData({
+            cumulativeFeed: totalFeed.toFixed(2),
+            cumulativeFeedCost: totalCost.toFixed(2)
           });
         }
-        
-        // 加上当日数据
-        const todayAmount = parseFloat(that.data.feedAmount) || 0;
-        const todayPrice = parseFloat(that.data.feedPrice) || 0;
-        const todayCost = (todayAmount * todayPrice / 1000);
-        
-        totalFeed += todayAmount;
-        totalCost += todayCost;
-        
-        that.setData({
-          cumulativeFeed: totalFeed.toFixed(2),
-          cumulativeFeedCost: totalCost.toFixed(2)
-        });
-      }
-    });
+      });
   },
 
   // 保存数据
