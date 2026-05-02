@@ -26,8 +26,11 @@ exports.main = async (event, context) => {
     feedMiddle,
     feedRear,
     feedAvg,
-    feedAmount,
-    feedPrice,
+    feedAmount,        // 当日上料量（kg）
+    feedPrice,         // 饲料单价（元/吨）
+    feedCost,          // 上料金额（元）
+    cumulativeFeed,    // 累计上料量（kg）
+    cumulativeFeedCost,// 累计上料金额（元）
     feedFactory,
     nightTargetTemp,
     nightMinTemp,
@@ -134,14 +137,16 @@ exports.main = async (event, context) => {
       feedAvg: fAvg,
 
       // 上料
-      feedAmount: feedAmount || '',
-      feedPrice: feedPrice || '',
+      feedAmount: feedAmount || '',        // 当日上料量（kg）
+      feedPrice: feedPrice || '',          // 饲料单价（元/吨）
+      feedCost: feedCost || '',            // 上料金额（元）
+      cumulativeFeed: cumulativeFeed || '',     // 累计上料量（kg）
+      cumulativeFeedCost: cumulativeFeedCost || '', // 累计上料金额（元）
       feedFactory: feedFactory || '',
 
       // 计算指标
       dailyGain: dailyGain.toFixed(1),
       dailyFCR: dailyFCR,
-      cumulativeFeed: cumulativeFeed,
 
       // 夜间环境
       nightTargetTemp: nightTargetTemp || '',

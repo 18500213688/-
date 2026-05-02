@@ -17,9 +17,6 @@ Page({
     // 周报数据
     weekReportRows: [],
 
-    // 环控数据
-    envList: [],
-
     // 历史批次
     historyList: [],
     hasHistory: false
@@ -67,7 +64,6 @@ Page({
       that.setData({ batchInfo: batch });
       that.loadDailyData();
       that.loadWeeklyData();
-      that.loadEnvData();
       that.loadHistoryBatches();
     });
   },
@@ -94,95 +90,52 @@ Page({
       });
   },
 
-  // 加载周报数据
+  // 加载周报数据（完全动态，有数据就显示）
   loadWeeklyData: function() {
     const that = this;
     if (!this.data.batchInfo) return;
     const db = wx.cloud.database();
     const batchId = this.data.batchInfo._id;
-    const batch = this.data.batchInfo;
 
     db.collection('weekly_data')
       .where({ batchId: batchId })
-      .orderBy('weekendDayAge', 'asc')
+      .orderBy('exitDayAge', 'asc')
       .get({
         success: res => {
-          const saved = {};
-          (res.data || []).forEach(d => {
-            saved[d.weekendDayAge] = d;
-          });
+          const list = res.data || [];
+          const rows = [];
 
-          // 7周 + 出栏
-          const rows = [
-            { dayAge: 7,  label: '第1周', isExit: false },
-            { dayAge: 14, label: '第2周', isExit: false },
-            { dayAge: 21, label: '第3周', isExit: false },
-            { dayAge: 28, label: '第4周', isExit: false },
-            { dayAge: 35, label: '第5周', isExit: false },
-            { dayAge: 42, label: '第6周', isExit: false },
-            { dayAge: 49, label: '第7周', isExit: false }
-          ].map(item => {
-            const d = saved[item.dayAge];
-            if (d) {
-              return {
-                ...item,
-                avgWeight: d.avgWeight || '',
-                weekendStock: d.weekendStock || '',
-                survivalRate: d.survivalRate || '',
-                cumulativeFCR: d.cumulativeFCR || '',
-                cumulativeFeed: d.cumulativeFeed || '',
-                cumulativeCost: d.cumulativeCost || '',
-                feedPrice: d.feedPrice || '',
-                meatCost: d.meatCost || '',
-                feedFactory: d.feedFactory || ''
-              };
+          list.forEach(d => {
+            const isWeekData = d.isWeekData || (d.exitDayAge % 7 === 0);
+            let label = '';
+            
+            if (isWeekData) {
+              // 周数据：1, 2, 3, 4, 5, 6, 7, 8, 9, 10...
+              const weekNo = d.weekNo || Math.floor(d.exitDayAge / 7);
+              label = String(weekNo);
+            } else {
+              // 出栏数据：38天出栏, 42天出栏...
+              label = d.exitDayAge + '天出栏';
             }
-            return { ...item, avgWeight: '', weekendStock: '', survivalRate: '', cumulativeFCR: '', cumulativeFeed: '', cumulativeCost: '', feedPrice: '', meatCost: '', feedFactory: '' };
-          });
-
-          // 出栏行
-          const exitAge = batch.exitAge || '';
-          const exitData = saved[exitAge] || {};
-          rows.push({
-            dayAge: exitAge,
-            label: '出栏',
-            isExit: true,
-            avgWeight: exitData.avgWeight || '',
-            weekendStock: exitData.weekendStock || '',
-            survivalRate: exitData.survivalRate || '',
-            cumulativeFCR: exitData.cumulativeFCR || '',
-            cumulativeFeed: exitData.cumulativeFeed || '',
-            cumulativeCost: exitData.cumulativeCost || '',
-            feedPrice: exitData.feedPrice || '',
-            meatCost: exitData.meatCost || '',
-            feedFactory: exitData.feedFactory || ''
+            
+            rows.push({
+              dayAge: d.exitDayAge,
+              label: label,
+              isExit: !isWeekData,
+              hasData: true,
+              avgWeight: d.avgWeight || '',
+              weekendStock: d.weekendStock || '',
+              survivalRate: d.survivalRate || '',
+              cumulativeFCR: d.cumulativeFCR || '',
+              cumulativeFeed: d.cumulativeFeed || '',
+              cumulativeCost: d.cumulativeFeedCost || d.cumulativeCost || '',
+              feedPrice: d.feedPrice || '',
+              meatCost: d.meatCost || '',
+              feedFactory: d.feedFactory || ''
+            });
           });
 
           that.setData({ weekReportRows: rows });
-        }
-      });
-  },
-
-  // 加载环控数据
-  loadEnvData: function() {
-    const that = this;
-    if (!this.data.batchInfo) return;
-    const db = wx.cloud.database();
-    db.collection('env_data')
-      .where({ batchId: this.data.batchInfo._id })
-      .orderBy('date', 'asc')
-      .get({
-        success: res => {
-          const list = (res.data || []).map(item => {
-            if (item.date) {
-              const d = new Date(item.date);
-              const month = String(d.getMonth() + 1).padStart(2, '0');
-              const day = String(d.getDate()).padStart(2, '0');
-              item.dateStr = month + '-' + day;
-            }
-            return item;
-          });
-          that.setData({ envList: list });
         }
       });
   },

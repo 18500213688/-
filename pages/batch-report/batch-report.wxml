@@ -4,6 +4,13 @@
     <text class="back-btn">← 返回</text>
   </view>
 
+  <!-- Tab切换 -->
+  <view class="report-tabs">
+    <view class="report-tab {{currentTab === 'daily' ? 'active' : ''}}" bindtap="switchTab" data-tab="daily">日报</view>
+    <view class="report-tab {{currentTab === 'env' ? 'active' : ''}}" bindtap="switchTab" data-tab="env">环控</view>
+    <view class="report-tab {{currentTab === 'weekly' ? 'active' : ''}}" bindtap="switchTab" data-tab="weekly">周报</view>
+  </view>
+
   <!-- 批次信息卡 -->
   <view class="card batch-info-card">
     <view class="batch-info-row">
@@ -70,101 +77,188 @@
     <text class="survival-value">{{batch.survival ? batch.survival + '%' : '-'}}</text>
   </view>
 
-  <!-- 日数据汇总 -->
-  <view class="card">
-    <view class="card-title">📋 日数据汇总</view>
-    <scroll-view scroll-x="true" class="table-scroll">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>日龄</th>
-            <th>品种</th>
-            <th>分类</th>
-              <th>存栏（只）</th>
-              <th>当日死亡</th>
-              <th>当日淘汰</th>
-              <th>累计死淘</th>
-              <th>存活率(%)</th>
-              <th>呼吸道(%)</th>
-            <th>体重(g)</th>
-            <th>日增重(g)</th>
-            <th>日耗料(g)</th>
-            <th>日料比</th>
-            <th>累计耗料(g)</th>
-            <th>累计料比</th>
-          </tr>
-        </thead>
-        <tbody>
-          <block wx:for="{{dailyList}}" wx:key="dayAge">
+  <!-- 日报 Tab -->
+  <view wx:if="{{currentTab === 'daily'}}">
+    <!-- 批次信息卡 -->
+    <view class="card batch-info-card">
+      <view class="batch-info-row">
+        <view class="batch-info-cell">
+          <text class="batch-info-label">公司</text>
+          <text class="batch-info-value">{{batch.companyName || '-'}}</text>
+        </view>
+        <view class="batch-info-cell">
+          <text class="batch-info-label">厂区</text>
+          <text class="batch-info-value">{{batch.farm || '-'}}</text>
+        </view>
+        <view class="batch-info-cell">
+          <text class="batch-info-label">栋号</text>
+          <text class="batch-info-value">{{batch.house || '-'}}</text>
+        </view>
+      </view>
+      <view class="batch-info-row">
+        <view class="batch-info-cell">
+          <text class="batch-info-label">品种</text>
+          <text class="batch-info-value">{{batch.variety || '-'}}</text>
+        </view>
+        <view class="batch-info-cell">
+          <text class="batch-info-label">分类</text>
+          <text class="batch-info-value">{{batch.type || '-'}}</text>
+        </view>
+        <view class="batch-info-cell">
+          <text class="batch-info-label">出栏日龄</text>
+          <text class="batch-info-value">{{batch.exitAge || '-'}}天</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 日数据汇总 -->
+    <view class="card">
+      <view class="card-title">📋 日数据汇总</view>
+      <scroll-view scroll-x="true" class="table-scroll">
+        <table class="table">
+          <thead>
             <tr>
-              <td>{{item.dayAge}}</td>
-              <td>{{batch.variety || '-'}}</td>
-              <td>{{batch.type || '-'}}</td>
-              <td>{{item.currentStock || '-'}}</td>
-              <td>{{item.deadCount || 0}}</td>
-              <td>{{item.culledCount || 0}}</td>
-              <td>{{item.cumulativeDead || 0}}</td>
-              <td>{{item.survivalRate || '-'}}</td>
-              <td>{{item.respiratoryRate || '-'}}</td>
-              <td>{{item.weightAvg || '-'}}</td>
-              <td>{{item.dailyGain || '-'}}</td>
-              <td>{{item.feedAvg || '-'}}</td>
-              <td>{{item.dailyFCR || '-'}}</td>
-              <td>{{item.cumulativeFeed || '-'}}</td>
-              <td>{{item.cumulativeFCR || '-'}}</td>
+              <th>日龄</th>
+              <th>存栏</th>
+              <th>死亡</th>
+              <th>淘汰</th>
+              <th>存活率</th>
+              <th>体重</th>
+              <th>日增重</th>
+              <th>日耗料</th>
+              <th>日料比</th>
+              <th>累计耗料</th>
+              <th>累计料比</th>
             </tr>
-          </block>
-          <tr wx:if="{{!dailyList || dailyList.length === 0}}">
-            <td colspan="15" class="empty-cell">暂无数据</td>
-          </tr>
-        </tbody>
-      </table>
-    </scroll-view>
+          </thead>
+          <tbody>
+            <block wx:for="{{dailyList}}" wx:key="dayAge">
+              <tr>
+                <td>{{item.dayAge}}</td>
+                <td>{{item.currentStock || '-'}}</td>
+                <td>{{item.deadCount || 0}}</td>
+                <td>{{item.culledCount || 0}}</td>
+                <td>{{item.survivalRate || '-'}}</td>
+                <td>{{item.weightAvg || '-'}}</td>
+                <td>{{item.dailyGain || '-'}}</td>
+                <td>{{item.feedAvg || '-'}}</td>
+                <td>{{item.dailyFCR || '-'}}</td>
+                <td>{{item.cumulativeFeed || '-'}}</td>
+                <td>{{item.cumulativeFCR || '-'}}</td>
+              </tr>
+            </block>
+            <tr wx:if="{{!dailyList || dailyList.length === 0}}">
+              <td colspan="11" class="empty-cell">暂无数据</td>
+            </tr>
+          </tbody>
+        </table>
+      </scroll-view>
+    </view>
   </view>
 
-  <!-- 周数据汇总 -->
-  <view class="card">
-    <view class="card-title">📑 周数据汇总</view>
-    <scroll-view scroll-x="true" class="table-scroll">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>周零</th>
-            <th>品种</th>
-            <th>分类</th>
-            <th>周末存栏</th>
-            <th>周末体重(g)</th>
-            <th>存活率(%)</th>
-            <th>累计料比</th>
-            <th>累计上料(kg)</th>
-            <th>累计金额(元)</th>
-            <th>饲料单价(元/kg)</th>
-            <th>造肉成本(元/斤)</th>
-            <th>饲料厂家</th>
-          </tr>
-        </thead>
-        <tbody>
-          <block wx:for="{{weekRows}}" wx:key="dayAge">
-            <tr style="{{item.isExit ? 'background:#e6fff0' : ''}}">
-              <td style="{{item.isExit ? 'font-weight:700;color:#52c41a' : ''}}">{{item.isExit ? (item.dayAge ? item.dayAge + '天出栏' : '出栏') : item.label}}</td>
-              <td>{{batch.variety || '-'}}</td>
-              <td>{{batch.type || '-'}}</td>
-              <td>{{item.weekendStock || '-'}}</td>
-              <td>{{item.avgWeight || '-'}}</td>
-              <td>{{item.survivalRate || '-'}}</td>
-              <td>{{item.cumulativeFCR || '-'}}</td>
-              <td>{{item.cumulativeFeed || '-'}}</td>
-              <td>{{item.cumulativeCost || '-'}}</td>
-              <td>{{item.feedPrice || '-'}}</td>
-              <td>{{item.meatCost || '-'}}</td>
-              <td>{{item.feedFactory || '-'}}</td>
+  <!-- 环控 Tab -->
+  <view wx:if="{{currentTab === 'env'}}">
+    <view class="card">
+      <view class="card-title">🌡️ 环控数据汇总</view>
+      <scroll-view scroll-x="true" class="table-scroll">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>日龄</th>
+              <th>日期</th>
+              <th colspan="7">夜间环境</th>
+              <th colspan="7">白天环境</th>
             </tr>
-          </block>
-          <tr wx:if="{{!weekRows || weekRows.length === 0}}">
-            <td colspan="12" class="empty-cell">暂无数据</td>
-          </tr>
-        </tbody>
-      </table>
-    </scroll-view>
+            <tr>
+              <th></th>
+              <th></th>
+              <th>目标温</th>
+              <th>最低温</th>
+              <th>湿度</th>
+              <th>风机</th>
+              <th>循环</th>
+              <th>开启</th>
+              <th>负压</th>
+              <th>目标温</th>
+              <th>最高温</th>
+              <th>湿度</th>
+              <th>风机</th>
+              <th>循环</th>
+              <th>开启</th>
+              <th>负压</th>
+            </tr>
+          </thead>
+          <tbody>
+            <block wx:for="{{envList}}" wx:key="dayAge">
+              <tr>
+                <td>{{item.dayAge}}</td>
+                <td>{{item.dateStr || '-'}}</td>
+                <td>{{item.nightTargetTemp || '-'}}</td>
+                <td>{{item.nightMinTemp || '-'}}</td>
+                <td>{{item.nightHumidity || '-'}}</td>
+                <td>{{item.nightFanCount || '-'}}</td>
+                <td>{{item.nightCycleTime || '-'}}</td>
+                <td>{{item.nightOpenTime || '-'}}</td>
+                <td>{{item.nightNegativePressure || '-'}}</td>
+                <td>{{item.dayTargetTemp || '-'}}</td>
+                <td>{{item.dayMaxTemp || '-'}}</td>
+                <td>{{item.dayHumidity || '-'}}</td>
+                <td>{{item.dayFanCount || '-'}}</td>
+                <td>{{item.dayCycleTime || '-'}}</td>
+                <td>{{item.dayOpenTime || '-'}}</td>
+                <td>{{item.dayNegativePressure || '-'}}</td>
+              </tr>
+            </block>
+            <tr wx:if="{{!envList || envList.length === 0}}">
+              <td colspan="16" class="empty-cell">暂无数据</td>
+            </tr>
+          </tbody>
+        </table>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 周报 Tab -->
+  <view wx:if="{{currentTab === 'weekly'}}">
+    <view class="card">
+      <view class="card-title">📑 周数据汇总</view>
+      <scroll-view scroll-x="true" class="table-scroll">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>类型</th>
+              <th>存栏</th>
+              <th>体重</th>
+              <th>存活率</th>
+              <th>累计料比</th>
+              <th>累计上料</th>
+              <th>累计金额</th>
+              <th>单价</th>
+              <th>造肉成本</th>
+              <th>厂家</th>
+            </tr>
+          </thead>
+          <tbody>
+            <block wx:for="{{weekRows}}" wx:key="dayAge">
+              <tr style="{{item.isExit ? 'background:#e6fff0' : ''}}">
+                <td style="{{item.isExit ? 'font-weight:700;color:#52c41a' : ''}}">{{item.label}}</td>
+                <td>{{item.weekendStock || '-'}}</td>
+                <td>{{item.avgWeight || '-'}}</td>
+                <td>{{item.survivalRate || '-'}}</td>
+                <td>{{item.cumulativeFCR || '-'}}</td>
+                <td>{{item.cumulativeFeed || '-'}}</td>
+                <td>{{item.cumulativeCost || '-'}}</td>
+                <td>{{item.feedPrice || '-'}}</td>
+                <td>{{item.meatCost || '-'}}</td>
+                <td>{{item.feedFactory || '-'}}</td>
+              </tr>
+            </block>
+            <tr wx:if="{{!weekRows || weekRows.length === 0}}">
+              <td colspan="10" class="empty-cell">暂无数据</td>
+            </tr>
+          </tbody>
+        </table>
+      </scroll-view>
+    </view>
   </view>
 </view>

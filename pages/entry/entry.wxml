@@ -75,12 +75,26 @@
     <!-- 上料数据 -->
     <view class="form-row cols3">
       <view>
-        <view class="form-label">料塔上料量（kg）</view>
-        <input class="form-input" type="number" value="{{feedAmount}}" data-field="feedAmount" bindinput="onInput" />
+        <view class="form-label">当日上料量（kg）</view>
+        <input class="form-input" type="digit" value="{{feedAmount}}" data-field="feedAmount" bindinput="onFeedInput" />
       </view>
       <view>
-        <view class="form-label">公斤料价（元/kg）</view>
-        <input class="form-input" type="digit" value="{{feedPrice}}" data-field="feedPrice" bindinput="onInput" />
+        <view class="form-label">饲料单价（元/吨）</view>
+        <input class="form-input" type="digit" value="{{feedPrice}}" data-field="feedPrice" bindinput="onFeedInput" />
+      </view>
+      <view>
+        <view class="form-label">上料金额（元）</view>
+        <input class="form-input" value="{{feedCost}}" disabled style="background:#f0f5ff;color:#1677ff;font-weight:600" />
+      </view>
+    </view>
+    <view class="form-row cols3">
+      <view>
+        <view class="form-label">累计上料量（kg）</view>
+        <input class="form-input" value="{{cumulativeFeed}}" disabled style="background:#f6ffed;color:#52c41a;font-weight:600" />
+      </view>
+      <view>
+        <view class="form-label">累计上料金额（元）</view>
+        <input class="form-input" value="{{cumulativeFeedCost}}" disabled style="background:#f6ffed;color:#52c41a;font-weight:600" />
       </view>
       <view>
         <view class="form-label">饲料厂家</view>

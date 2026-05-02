@@ -1,55 +1,82 @@
 <view class="container">
-  <!-- 周信息 -->
+  <!-- 出栏日龄信息 -->
   <view class="card">
-    <view class="card-title">📅 周信息</view>
+    <view class="card-title">📅 出栏日龄信息</view>
     
     <view class="form-item">
-      <view class="form-label">当前周序号</view>
-      <input class="form-input" type="number" value="{{weekNo}}" bindinput="onWeekNoInput" placeholder="如：第1周" />
+      <view class="form-label">出栏日龄（天）</view>
+      <input class="form-input" type="number" value="{{exitDayAge}}" bindinput="onExitDayAgeInput" placeholder="如：7、14、21...或38" />
     </view>
+    <view class="hint">💡 输入出栏日龄后自动从日录入汇总数据（7的倍数为周数据，其他为出栏数据）</view>
+  </view>
 
-    <view class="form-item">
-      <view class="form-label">周起始日期</view>
-      <picker mode="date" value="{{weekStart}}" bindchange="onWeekStartChange">
-        <input class="form-input" value="{{weekStart}}" disabled placeholder="选择周起始日期" />
-      </picker>
+  <!-- 基础数据 -->
+  <view class="card">
+    <view class="card-title">📊 基础数据</view>
+
+    <view class="form-row cols2">
+      <view>
+        <view class="form-label">存栏（只）</view>
+        <input class="form-input" type="number" value="{{weekStock}}" bindinput="onStockInput" placeholder="自动计算或手动填写" />
+      </view>
+      <view>
+        <view class="form-label">平均体重（g）*</view>
+        <input class="form-input" type="digit" value="{{avgWeight}}" bindinput="onWeightInput" placeholder="每周末称重必填" />
+      </view>
     </view>
   </view>
 
-  <!-- 周数据 -->
+  <!-- 饲料数据 -->
   <view class="card">
-    <view class="card-title">📊 本周数据</view>
+    <view class="card-title">🌾 饲料数据</view>
 
     <view class="form-row cols2">
       <view>
-        <view class="form-label">本周死淘（只）</view>
-        <input class="form-input" type="number" value="{{weekDead}}" bindinput="onDeadInput" placeholder="0" />
+        <view class="form-label">累计上料量（kg）</view>
+        <input class="form-input" type="digit" value="{{cumulativeFeed}}" bindinput="onCumulativeFeedInput" placeholder="自动计算或手动填写" />
       </view>
       <view>
-        <view class="form-label">本周耗料（kg）</view>
-        <input class="form-input" type="digit" value="{{weekFeed}}" bindinput="onFeedInput" placeholder="0" />
+        <view class="form-label">库存料量（kg）*</view>
+        <input class="form-input" type="digit" value="{{stockFeed}}" bindinput="onStockFeedInput" placeholder="周末料塔剩余必填" />
       </view>
     </view>
 
     <view class="form-row cols2">
       <view>
-        <view class="form-label">周末均重（g）</view>
-        <input class="form-input" type="digit" value="{{weekWeight}}" bindinput="onWeightInput" placeholder="0" />
+        <view class="form-label">累计采食量（kg）</view>
+        <input class="form-input" type="digit" value="{{actualFeed}}" bindinput="onActualFeedInput" placeholder="自动计算或手动填写" />
       </view>
       <view>
-        <view class="form-label">周末存栏（只）</view>
-        <input class="form-input" type="number" value="{{weekStock}}" bindinput="onStockInput" placeholder="0" />
+        <view class="form-label">累计上料金额（元）</view>
+        <input class="form-input" type="digit" value="{{cumulativeFeedCost}}" bindinput="onCumulativeFeedCostInput" placeholder="自动计算或手动填写" />
+      </view>
+    </view>
+  </view>
+
+  <!-- 计算指标 -->
+  <view class="card">
+    <view class="card-title">📈 计算指标</view>
+
+    <view class="form-row cols2">
+      <view>
+        <view class="form-label">饲料单价（元/吨）</view>
+        <input class="form-input" type="digit" value="{{feedPrice}}" bindinput="onFeedPriceInput" placeholder="自动计算或手动填写" />
+      </view>
+      <view>
+        <view class="form-label">累计料比</view>
+        <input class="form-input" type="digit" value="{{cumulativeFCR}}" bindinput="onFCRInput" placeholder="自动计算或手动填写" />
       </view>
     </view>
 
-    <view class="form-item">
-      <view class="form-label">本周料比</view>
-      <input class="form-input" type="digit" value="{{weekFCR}}" bindinput="onFCRInput" placeholder="自动计算或手动填写" />
-    </view>
-
-    <view class="form-item">
-      <view class="form-label">备注</view>
-      <textarea class="form-textarea" value="{{remark}}" bindinput="onRemarkInput" placeholder="本周特殊情况说明..." maxlength="200"></textarea>
+    <view class="form-row cols2">
+      <view>
+        <view class="form-label">饲料造肉成本（元/斤）</view>
+        <input class="form-input" type="digit" value="{{meatCost}}" bindinput="onMeatCostInput" placeholder="自动计算或手动填写" />
+      </view>
+      <view>
+        <view class="form-label">饲料厂家</view>
+        <input class="form-input" value="{{feedFactory}}" bindinput="onFeedFactoryInput" placeholder="自动获取或手动填写" />
+      </view>
     </view>
   </view>
 

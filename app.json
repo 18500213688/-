@@ -1,7 +1,7 @@
 {
   "pages": [
     "pages/entry/entry",
-    "pages/data/data",
+    "pages/week-entry/week-entry",
     "pages/report/report",
     "pages/settings/settings",
     "pages/bind-confirm/bind-confirm",
@@ -21,11 +21,11 @@
     "list": [
       {
         "pagePath": "pages/entry/entry",
-        "text": "录入"
+        "text": "日录入"
       },
       {
-        "pagePath": "pages/data/data",
-        "text": "数据"
+        "pagePath": "pages/week-entry/week-entry",
+        "text": "周录入"
       },
       {
         "pagePath": "pages/report/report",

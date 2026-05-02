@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>机掌柜-养殖数据小程序预览</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            max-width: 414px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+        .phone-frame {
+            background: #fff;
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 60px;
+        }
+        
+        /* 状态栏 */
+        .status-bar {
+            background: #fff;
+            padding: 8px 16px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            border-bottom: 1px solid #eee;
+        }
+        
+        /* 顶部批次信息 */
+        .batch-info {
+            background: #1677ff;
+            color: #fff;
+            padding: 12px 16px;
+            margin: 10px;
+            border-radius: 12px;
+        }
+        .batch-row {
+            display: flex;
+            margin-bottom: 6px;
+        }
+        .batch-row:last-child { margin-bottom: 0; }
+        .batch-item {
+            flex: 1;
+            text-align: center;
+        }
+        .batch-label {
+            font-size: 11px;
+            opacity: 0.75;
+        }
+        .batch-value {
+            font-size: 13px;
+            margin-top: 2px;
+        }
+        
+        /* 卡片 */
+        .card {
+            background: #fff;
+            margin: 10px;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .card-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        /* 表单 */
+        .form-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .form-item {
+            flex: 1;
+        }
+        .form-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        .form-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            text-align: center;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #1677ff;
+        }
+        .survival-rate {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1677ff;
+            padding: 6px 0;
+            text-align: center;
+        }
+        
+        /* 提示 */
+        .hint {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 10px;
+        }
+        
+        /* 按钮 */
+        .btn {
+            width: calc(100% - 20px);
+            margin: 10px;
+            padding: 12px;
+            background: #1677ff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        /* 底部导航 */
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 414px;
+            background: #fff;
+            display: flex;
+            border-top: 1px solid #eee;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .tab-item {
+            flex: 1;
+            text-align: center;
+            padding: 8px 0;
+            font-size: 12px;
+            color: #999;
+        }
+        .tab-item.active {
+            color: #1677ff;
+        }
+        .tab-icon {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+        
+        /* 页面切换 */
+        .page { display: none; }
+        .page.active { display: block; }
+        
+        /* 报表表格 */
+        .table-scroll {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        th, td {
+            padding: 8px 12px;
+            text-align: center;
+            border: 1px solid #eee;
+            white-space: nowrap;
+        }
+        th {
+            background: #f5f5f5;
+            font-weight: 600;
+        }
+        
+        /* Tab切换 */
+        .report-tabs {
+            display: flex;
+            background: #fff;
+            margin: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .report-tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+        }
+        .report-tab.active {
+            background: #1677ff;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <!-- 状态栏 -->
+        <div class="status-bar">机掌柜-养殖数据录入</div>
+        
+        <!-- 日录入页面 -->
+        <div id="page-entry" class="page active">
+            <!-- 批次信息 -->
+            <div class="batch-info">
+                <div class="batch-row">
+                    <div class="batch-item">
+                        <div class="batch-label">栋号</div>
+                        <div class="batch-value">1栋</div>
+                    </div>
+                    <div class="batch-item">
+                        <div class="batch-label">品种</div>
+                        <div class="batch-value">科宝</div>
+                    </div>
+                    <div class="batch-item">
+                        <div class="batch-label">类型</div>
+                        <div class="batch-value">快大</div>
+                    </div>
+                </div>
+                <div class="batch-row">
+                    <div class="batch-item">
+                        <div class="batch-label">入舍日期</div>
+                        <div class="batch-value">2026-04-20</div>
+                    </div>
+                    <div class="batch-item">
+                        <div class="batch-label">入舍数量（只）</div>
+                        <div class="batch-value">12,800</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 数据录入 -->
+            <div class="card">
+                <div class="card-title">📝 数据录入</div>
+                
+                <div class="form-row">
+                    <div class="form-item">
+                        <div class="form-label">日龄</div>
+                        <input type="number" class="form-input" id="dayAge" value="0" placeholder="输入日龄" onchange="loadDayData()">
+                    </div>
+                    <div class="form-item">
+                        <div class="form-label">存栏（只）</div>
+                        <input type="number" class="form-input" id="currentStock" placeholder="输入存栏" oninput="calcSurvivalRate()">
+                    </div>
+                    <div class="form-item">
+                        <div class="form-label">存活率</div>
+                        <div class="survival-rate" id="survivalRate">100.0%</div>
+                    </div>
+                </div>
+                <div class="hint">💡 输入日龄后可回填历史数据，输入存栏后存活率自动计算</div>
+                
+                <div class="form-row">
+                    <div class="form-item">
+                        <div class="form-label">死亡（只）</div>
+                        <input type="number" class="form-input" placeholder="0">
+                    </div>
+                    <div class="form-item">
+                        <div class="form-label">淘汰（只）</div>
+                        <input type="number" class="form-input" placeholder="0">
+                    </div>
+                    <div class="form-item">
+                        <div class="form-label">死淘（只）</div>
+                        <input type="number" class="form-input" value="0" disabled style="background:#fff7e6;color:#fa8c16;font-weight:600">
+                    </div>
+                    <div class="form-item">
+                        <div class="form-label">呼吸道（%）</div>
+                        <input type="number" class="form-input" placeholder="0">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 体重数据 -->
+            <div class="card">
+                <div class="card-title">⚖️ 体重数据（g）</div>
+                <div class="form-row">
+                    <div class="form-item">
+                        <div class="form-label">前</div>
+                        <input type="number" class="form-input" placeholder="0">
+                    </div>
+                    <div class="form-item">
+                        <div class="form-label">中</div>
+                        <input type="number" class="form-input" placeholder="0">
+                    </div>
+                    <div class="form-item">
+                        <div class="form-label">后</div>
+                        <input type="number" class="form-input" placeholder="0">
+                    </div>
+                </div>
+                <div class="hint">💡 填1~3个点，自动算平均</div>
+            </div>
+            
+            <!-- 夜间环境 -->
+            <div class="card">
+                <div class="card-title">🌙 夜间环境（0:00~3:00）</div>
+                <div class="form-row">
+                    <div class="form-item">
+                        <div class="form-label">目标温度（℃）</div>
+                        <input type="number" class="form-input" placeholder="0">
+                    </div>
+                    <div class="form-item">
+                        <div class="form-label">最低温度（℃）</div>
+                        <input type="number" class="form-input" placeholder="0">
+                    </div>
+                    <div class="form-item">
+                        <div class="form-label">湿度（%）</div>
+                        <input type="number" class="form-input" placeholder="0">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 白天环境 -->
+            <div class="card">
+                <div class="card-title">☀️ 白天环境（12:00~15:00）</div>
+                <div class="form-row">
+                    <div class="form-item">
+                        <div class="form-label">目标温度（℃）</div>
+                        <input type="number" class="form-input" placeholder="0">
+                    </div>
+                    <div class="form-item">
+                        <div class="form-label">最高温度（℃）</div>
+                        <input type="number" class="form-input" placeholder="0">
+                    </div>
+                    <div class="form-item">
+                        <div class="form-label">湿度（%）</div>
+                        <input type="number" class="form-input" placeholder="0">
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn">保存</button>
+        </div>
+        
+        <!-- 周录入页面 -->
+        <div id="page-week" class="page">
+            <div class="card">
+                <div class="card-title">📅 周信息</div>
+                <div class="form-row">
+                    <div class="form-item">
+                        <div class="form-label">当前周序号</div>
+                        <input type="number" class="form-input" placeholder="第1周">
+                    </div>
+                    <div class="form-item">
+                        <div class="form-label">周起始日期</div>
+                        <input type="date" class="form-input">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">📊 本周数据</div>
+                <div class="form-row">
+                    <div class="form-item">
+                        <div class="form-label">本周死淘（只）</div>
+                        <input type="number" class="form-input" placeholder="0">
+                    </div>
+                    <div class="form-item">
+                        <div class="form-label">本周耗料（kg）</div>
+                        <input type="number" class="form-input" placeholder="0">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-item">
+                        <div class="form-label">周末均重（g）</div>
+                        <input type="number" class="form-input" placeholder="0">
+                    </div>
+                    <div class="form-item">
+                        <div class="form-label">周末存栏（只）</div>
+                        <input type="number" class="form-input" placeholder="0">
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn">保存本周数据</button>
+        </div>
+        
+        <!-- 报表页面 -->
+        <div id="page-report" class="page">
+            <div class="report-tabs">
+                <div class="report-tab active" onclick="switchReportTab('daily')">日报</div>
+                <div class="report-tab" onclick="switchReportTab('env')">环控</div>
+                <div class="report-tab" onclick="switchReportTab('weekly')">周报</div>
+            </div>
+            
+            <!-- 日报 -->
+            <div id="report-daily" class="report-content">
+                <div class="card">
+                    <div class="card-title">📋 日数据汇总</div>
+                    <div class="table-scroll">
+                        <table>
+                            <tr>
+                                <th>日龄</th>
+                                <th>存栏</th>
+                                <th>死亡</th>
+                                <th>存活率</th>
+                                <th>体重</th>
+                            </tr>
+                            <tr>
+                                <td>0</td>
+                                <td>12800</td>
+                                <td>0</td>
+                                <td>100%</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>12750</td>
+                                <td>50</td>
+                                <td>99.6%</td>
+                                <td>45g</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 环控 -->
+            <div id="report-env" class="report-content" style="display:none">
+                <div class="card">
+                    <div class="card-title">🌡️ 环控数据汇总</div>
+                    <div class="table-scroll">
+                        <table>
+                            <tr>
+                                <th>日龄</th>
+                                <th>夜间温度</th>
+                                <th>夜间湿度</th>
+                                <th>白天温度</th>
+                                <th>白天湿度</th>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>33℃</td>
+                                <td>65%</td>
+                                <td>35℃</td>
+                                <td>60%</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 周报 -->
+            <div id="report-weekly" class="report-content" style="display:none">
+                <div class="card">
+                    <div class="card-title">📑 周数据汇总</div>
+                    <div class="table-scroll">
+                        <table>
+                            <tr>
+                                <th>周</th>
+                                <th>存栏</th>
+                                <th>均重</th>
+                                <th>料比</th>
+                            </tr>
+                            <tr>
+                                <td>第1周</td>
+                                <td>12500</td>
+                                <td>180g</td>
+                                <td>1.25</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 设置页面 -->
+        <div id="page-settings" class="page">
+            <div class="card">
+                <div class="card-title">👤 个人信息</div>
+                <div class="hint">微信一键登录</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">🏢 公司信息</div>
+                <div class="form-item" style="margin-bottom:10px">
+                    <div class="form-label">公司名称</div>
+                    <input type="text" class="form-input" placeholder="如：绿谷农牧">
+                </div>
+                <div class="form-item">
+                    <div class="form-label">所属场区</div>
+                    <input type="text" class="form-input" placeholder="如：1场">
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">🐔 新建批次</div>
+                <div class="form-row">
+                    <div class="form-item">
+                        <div class="form-label">栋号</div>
+                        <input type="text" class="form-input" placeholder="1栋">
+                    </div>
+                    <div class="form-item">
+                        <div class="form-label">品种</div>
+                        <input type="text" class="form-input" placeholder="科宝">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-item">
+                        <div class="form-label">入舍日期</div>
+                        <input type="date" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <div class="form-label">入舍数量</div>
+                        <input type="number" class="form-input" placeholder="12800">
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn">保存设置</button>
+        </div>
+        
+        <!-- 底部导航 -->
+        <div class="tab-bar">
+            <div class="tab-item active" onclick="switchTab('entry')">
+                <div class="tab-icon">📝</div>
+                <div>日录入</div>
+            </div>
+            <div class="tab-item" onclick="switchTab('week')">
+                <div class="tab-icon">📅</div>
+                <div>周录入</div>
+            </div>
+            <div class="tab-item" onclick="switchTab('report')">
+                <div class="tab-icon">📊</div>
+                <div>报表</div>
+            </div>
+            <div class="tab-item" onclick="switchTab('settings')">
+                <div class="tab-icon">⚙️</div>
+                <div>设置</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 入舍数量（用于计算存活率）
+        const initialStock = 12800;
+        
+        // 计算存活率
+        function calcSurvivalRate() {
+            const stock = parseInt(document.getElementById('currentStock').value) || 0;
+            if (stock > 0 && initialStock > 0) {
+                const rate = ((stock / initialStock) * 100).toFixed(1);
+                document.getElementById('survivalRate').textContent = rate + '%';
+            }
+        }
+        
+        // 页面切换
+        function switchTab(tab) {
+            // 隐藏所有页面
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            // 显示选中页面
+            document.getElementById('page-' + tab).classList.add('active');
+            // 更新tab样式
+            document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
+        
+        // 报表tab切换
+        function switchReportTab(type) {
+            document.querySelectorAll('.report-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('.report-content').forEach(c => c.style.display = 'none');
+            document.getElementById('report-' + type).style.display = 'block';
+        }
+        
+        // 加载日龄数据（模拟）
+        function loadDayData() {
+            const dayAge = document.getElementById('dayAge').value;
+            if (dayAge === '0') {
+                document.getElementById('currentStock').value = '12800';
+                document.getElementById('survivalRate').textContent = '100.0%';
+            } else if (dayAge === '1') {
+                document.getElementById('currentStock').value = '12750';
+                document.getElementById('survivalRate').textContent = '99.6%';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -26,8 +26,11 @@ Page({
     respiratoryRate: '',
 
     // 上料数据
-    feedAmount: '',
-    feedPrice: '',
+    feedAmount: '',        // 当日上料量（kg）
+    feedPrice: '',         // 饲料单价（元/吨）
+    feedCost: '',          // 上料金额（元）
+    cumulativeFeed: '',    // 累计上料量（kg）
+    cumulativeFeedCost: '',// 累计上料金额（元）
     feedFactory: '',
 
     // 体重数据
@@ -207,6 +210,9 @@ Page({
             survivalRate: d.survivalRate || '100.0',
             feedAmount: d.feedAmount || '',
             feedPrice: d.feedPrice || '',
+            feedCost: d.feedCost || '',
+            cumulativeFeed: d.cumulativeFeed || '',
+            cumulativeFeedCost: d.cumulativeFeedCost || '',
             feedFactory: d.feedFactory || '',
             weightFront: d.weightFront || '',
             weightMiddle: d.weightMiddle || '',
@@ -263,6 +269,9 @@ Page({
       respiratoryRate: '',
       feedAmount: '',
       feedPrice: '',
+      feedCost: '',
+      cumulativeFeed: '',
+      cumulativeFeedCost: '',
       feedFactory: '',
       weightFront: '',
       weightMiddle: '',
@@ -311,7 +320,9 @@ Page({
     // 存栏变化时，自动计算存活率
     if (field === 'currentStock') {
       const stock = parseInt(val) || 0;
-      const batch = app.globalData.currentBatch;
+      // 优先从本地存储获取批次信息
+      const localBatch = wx.getStorageSync('currentBatch');
+      const batch = localBatch || app.globalData.currentBatch;
       if (batch && batch.initialStock) {
         const initialStock = parseInt(batch.initialStock) || 0;
         if (initialStock > 0) {
@@ -361,6 +372,80 @@ Page({
     }
   },
 
+  // 饲料输入处理（上料量、单价）
+  onFeedInput: function(e) {
+    const field = e.currentTarget.dataset.field;
+    const val = e.detail.value;
+    const data = { [field]: val };
+    
+    // 计算上料金额
+    const amount = parseFloat(field === 'feedAmount' ? val : this.data.feedAmount) || 0;
+    const price = parseFloat(field === 'feedPrice' ? val : this.data.feedPrice) || 0;
+    
+    if (amount > 0 && price > 0) {
+      // 上料金额 = 上料量(kg) × 单价(元/吨) ÷ 1000
+      const cost = (amount * price / 1000).toFixed(2);
+      data.feedCost = cost;
+    }
+    
+    this.setData(data);
+    
+    // 重新计算累计上料量和金额
+    this.calculateCumulativeFeed();
+  },
+
+  // 计算累计上料量和金额
+  calculateCumulativeFeed: function() {
+    const that = this;
+    const batch = app.globalData.currentBatch;
+    if (!batch) return;
+    
+    const currentDayAge = parseInt(this.data.dayAge) || 0;
+    
+    // 查询历史数据计算累计
+    wx.cloud.callFunction({
+      name: 'getDailyData',
+      data: { 
+        batchId: batch._id, 
+        dayAge: 0, 
+        getAll: true 
+      },
+      success: res => {
+        let totalFeed = 0;
+        let totalCost = 0;
+        
+        if (res.result && res.result.list) {
+          res.result.list.forEach(item => {
+            const dayAge = parseInt(item.dayAge);
+            // 只累加小于当前日龄的数据
+            if (dayAge < currentDayAge) {
+              totalFeed += parseFloat(item.feedAmount) || 0;
+              // 计算历史金额
+              const amount = parseFloat(item.feedAmount) || 0;
+              const price = parseFloat(item.feedPrice) || 0;
+              if (amount > 0 && price > 0) {
+                totalCost += (amount * price / 1000);
+              }
+            }
+          });
+        }
+        
+        // 加上当日数据
+        const todayAmount = parseFloat(that.data.feedAmount) || 0;
+        const todayPrice = parseFloat(that.data.feedPrice) || 0;
+        const todayCost = (todayAmount * todayPrice / 1000);
+        
+        totalFeed += todayAmount;
+        totalCost += todayCost;
+        
+        that.setData({
+          cumulativeFeed: totalFeed.toFixed(2),
+          cumulativeFeedCost: totalCost.toFixed(2)
+        });
+      }
+    });
+  },
+
   // 保存数据
   saveData: function() {
     if (!this.data.dayAge && this.data.dayAge !== 0) {
@@ -398,6 +483,9 @@ Page({
         respiratoryRate: parseFloat(that.data.respiratoryRate) || 0,
         feedAmount: that.data.feedAmount || '',
         feedPrice: that.data.feedPrice || '',
+        feedCost: that.data.feedCost || '',
+        cumulativeFeed: that.data.cumulativeFeed || '',
+        cumulativeFeedCost: that.data.cumulativeFeedCost || '',
         feedFactory: that.data.feedFactory || '',
         weightFront: that.data.weightFront || '',
         weightMiddle: that.data.weightMiddle || '',

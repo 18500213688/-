@@ -1,15 +1,14 @@
 <view class="container">
-  <!-- 报表Tab切换：有历史批次时才显示"批次报表"按钮 -->
+  <!-- 报表Tab切换 -->
   <view class="report-tab-bar">
     <view class="tab-btn {{reportTab === 'daily' ? 'active' : ''}}" bindtap="switchReportTab" data-tab="daily">日报</view>
-    <view class="tab-btn {{reportTab === 'env' ? 'active' : ''}}" bindtap="switchReportTab" data-tab="env">环控报表</view>
     <view class="tab-btn {{reportTab === 'weekly' ? 'active' : ''}}" bindtap="switchReportTab" data-tab="weekly">周报</view>
-    <view class="tab-btn {{reportTab === 'history' ? 'active' : ''}}" bindtap="switchReportTab" data-tab="history" wx:if="{{hasHistory}}">批次报表</view>
+    <view class="tab-btn {{reportTab === 'history' ? 'active' : ''}}" bindtap="switchReportTab" data-tab="history" wx:if="{{hasHistory}}">历史批次</view>
   </view>
 
   <!-- ===== 日报 Tab ===== -->
   <view class="report-tab" wx:if="{{reportTab === 'daily'}}">
-    <view class="info-bar">💡 日龄范围筛选，往下拉查看完整表格</view>
+    <view class="info-bar">💡 日报一行显示所有数据，往下拉查看完整表格</view>
 
     <!-- 日龄筛选 -->
     <view class="card">
@@ -22,122 +21,73 @@
       <button class="btn btn-primary btn-sm" bindtap="applyFilter">应用筛选</button>
     </view>
 
-    <!-- 日数据汇总表 -->
+    <!-- 日报汇总表（一行显示所有数据） -->
     <view class="card">
-      <view class="card-title">📋 日数据汇总</view>
+      <view class="card-title">📋 日报汇总</view>
       <scroll-view scroll-x="true" class="table-scroll">
         <table class="table">
           <thead>
             <tr>
-              <th>日龄</th>
-              <th>品种</th>
-              <th>分类</th>
-              <th>存栏（只）</th>
-              <th>当日死亡</th>
-              <th>当日淘汰</th>
-              <th>累计死淘</th>
-              <th>存活率(%)</th>
-              <th>呼吸道(%)</th>
-              <th>体重(g)</th>
-              <th>日增重(g)</th>
-              <th>日耗料(g)</th>
-              <th>日料比</th>
-              <th>累计耗料(g)</th>
-              <th>累计料比</th>
+              <th rowspan="2">日龄</th>
+              <th rowspan="2">存栏</th>
+              <th rowspan="2">死亡</th>
+              <th rowspan="2">淘汰</th>
+              <th rowspan="2">存活率</th>
+              <th colspan="4">饲料数据</th>
+              <th colspan="7">夜间环控</th>
+              <th colspan="7">白天环控</th>
+            </tr>
+            <tr>
+              <th>当日上料</th>
+              <th>当日金额</th>
+              <th>累计上料</th>
+              <th>累计金额</th>
+              <th>目标温</th>
+              <th>最低温</th>
+              <th>湿度</th>
+              <th>风机</th>
+              <th>循环</th>
+              <th>开启</th>
+              <th>负压</th>
+              <th>目标温</th>
+              <th>最高温</th>
+              <th>湿度</th>
+              <th>风机</th>
+              <th>循环</th>
+              <th>开启</th>
+              <th>负压</th>
             </tr>
           </thead>
           <tbody>
             <block wx:for="{{dailyList}}" wx:key="dayAge">
               <tr>
                 <td>{{item.dayAge}}</td>
-                <td>{{batchInfo.variety || '-'}}</td>
-                <td>{{batchInfo.type || '-'}}</td>
                 <td>{{item.currentStock || '-'}}</td>
                 <td>{{item.deadCount || 0}}</td>
                 <td>{{item.culledCount || 0}}</td>
-                <td>{{item.cumulativeDead || 0}}</td>
                 <td>{{item.survivalRate || '-'}}</td>
-                <td>{{item.respiratoryRate || '-'}}</td>
-                <td>{{item.weightAvg || '-'}}</td>
-                <td>{{item.dailyGain || '-'}}</td>
-                <td>{{item.feedAvg || '-'}}</td>
-                <td>{{item.dailyFCR || '-'}}</td>
+                <td>{{item.feedAmount || '-'}}</td>
+                <td>{{item.feedCost || '-'}}</td>
                 <td>{{item.cumulativeFeed || '-'}}</td>
-                <td>{{item.cumulativeFCR || '-'}}</td>
-              </tr>
-            </block>
-            <tr wx:if="{{!dailyList || dailyList.length === 0}}">
-              <td colspan="15" class="empty-cell">暂无数据</td>
-            </tr>
-          </tbody>
-        </table>
-      </scroll-view>
-    </view>
-  </view>
-
-  <!-- ===== 环控 Tab ===== -->
-  <view class="report-tab" wx:if="{{reportTab === 'env'}}">
-    <view class="info-bar">💡 每日环控数据汇总，夜间+白天并排显示，往下拉查看完整表格</view>
-
-    <view class="card">
-      <view class="card-title">🌡️ 环控数据汇总</view>
-      <scroll-view scroll-x="true" class="table-scroll">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>日期</th>
-              <th>日龄</th>
-              <th>时段</th>
-              <th>目标温(℃)</th>
-              <th>最低温(℃)</th>
-              <th>湿度(%)</th>
-              <th>风机</th>
-              <th>循环(s)</th>
-              <th>开启(s)</th>
-              <th>窗户(%)</th>
-              <th>负压(Pa)</th>
-              <th>张口(%)</th>
-              <th>时段</th>
-              <th>目标温(℃)</th>
-              <th>最高温(℃)</th>
-              <th>湿度(%)</th>
-              <th>风机</th>
-              <th>循环(s)</th>
-              <th>开启(s)</th>
-              <th>窗户(%)</th>
-              <th>负压(Pa)</th>
-              <th>张口(%)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <block wx:for="{{envList}}" wx:key="date">
-              <tr>
-                <td>{{item.dateStr || '-'}}</td>
-                <td>{{item.dayAge}}天</td>
-                <td>夜间</td>
+                <td>{{item.cumulativeFeedCost || '-'}}</td>
                 <td>{{item.nightTargetTemp || '-'}}</td>
                 <td>{{item.nightMinTemp || '-'}}</td>
                 <td>{{item.nightHumidity || '-'}}</td>
                 <td>{{item.nightFanCount || '-'}}</td>
                 <td>{{item.nightCycleTime || '-'}}</td>
                 <td>{{item.nightOpenTime || '-'}}</td>
-                <td>{{item.nightWindowSize || '-'}}</td>
                 <td>{{item.nightNegativePressure || '-'}}</td>
-                <td>{{item.nightOpenMouthRate || '-'}}</td>
-                <td>白天</td>
                 <td>{{item.dayTargetTemp || '-'}}</td>
                 <td>{{item.dayMaxTemp || '-'}}</td>
                 <td>{{item.dayHumidity || '-'}}</td>
                 <td>{{item.dayFanCount || '-'}}</td>
                 <td>{{item.dayCycleTime || '-'}}</td>
                 <td>{{item.dayOpenTime || '-'}}</td>
-                <td>{{item.dayWindowSize || '-'}}</td>
                 <td>{{item.dayNegativePressure || '-'}}</td>
-                <td>{{item.dayOpenMouthRate || '-'}}</td>
               </tr>
             </block>
-            <tr wx:if="{{!envList || envList.length === 0}}">
-              <td colspan="22" class="empty-cell">暂无数据</td>
+            <tr wx:if="{{!dailyList || dailyList.length === 0}}">
+              <td colspan="23" class="empty-cell">暂无数据</td>
             </tr>
           </tbody>
         </table>
@@ -201,10 +151,10 @@
         <block wx:for="{{historyList}}" wx:key="_id">
           <view class="history-item" bindtap="viewHistoryBatch" data-id="{{item._id}}">
             <view class="history-info">
-              <view class="history-date">{{item.entryDateStr || '-'}}</view>
-              <view class="history-desc">{{item.variety || '-'}} · {{item.exitAge || item.targetAge || '-'}}天出栏</view>
+              <view class="history-date">{{item.entryDateStr || '-'}} · {{item.variety || '-'}}</view>
+              <view class="history-desc">{{item.exitAge ? item.exitAge + '天出栏' : (item.targetAge ? item.targetAge + '天预计出栏' : '养殖中')}}</view>
             </view>
-            <view class="history-arrow">查看报表 →</view>
+            <view class="history-arrow">查看详情 →</view>
           </view>
         </block>
         <view wx:if="{{!historyList || historyList.length === 0}}" class="empty-tip">
